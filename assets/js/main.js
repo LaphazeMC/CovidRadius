@@ -1,6 +1,9 @@
 var defaultLat = 45.1667;
 var defaultLong = 5.7167;
 var map = null;
+var markersLayer = L.featureGroup();
+var currentUserLocation = [];
+var isCurrentHomeLocationActive = false;
 function initMap() {
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -28,88 +31,105 @@ window.onload = function () {
     initMap();
 };
 
-// autoComplete.js on typing event emitter
-document.querySelector("#searchAddresses").addEventListener("autoComplete", event => {
-    console.log(event);
-});
-
-const autocompleteJs = new autoComplete({
-    data: {                              // Data src [Array, Function, Async] | (REQUIRED)
-        src: async () => {
-            // User search query
-            const query = document.querySelector("#searchAddresses").value;
-            // Fetch External Data Source
-            const source = await fetch('https://api-adresse.data.gouv.fr/search/?q=' + query);
-            var data = await source.json();
-            // Format data into JSON
-            var reformattedAddresses = [];
-            for (var i = 0; i < data.features.length; i++) {
-                reformattedAddresses.push({
-                    lat: data.features[i].geometry.coordinates[0],
-                    long: data.features[i].geometry.coordinates[1],
-                    city: data.features[i].properties.city,
-                    context: data.features[i].properties.context,
-                    postCode: data.features[i].properties.postcode,
-                    name: data.features[i].properties.name
-                })
+var $select = $('#searchAddresses').selectize({
+    valueField: 'latLong',
+    labelField: 'name',
+    searchField: 'name',
+    maxItems: 1,
+    create: false,
+    render: {
+        option: function (item, escape) {
+            return '<div>' +
+                '<span class="title">' +
+                '<span class="name">' + escape(item.name) + '</span>' +
+                '<span class="name">' + escape(item.context) + '</span>' +
+                '</span>' +
+                '<span class="description">' + escape(item.city) + '</span>' +
+                '<span class="description">' + escape(item.postCode) + '</span>' +
+                '</div>';
+        }
+    },
+    score: function () { return function () { return 1; }; }, // only filtering is done server side
+    load: function (query, callback) {
+        var self = this;
+        if (!query.length) return callback();
+        $.ajax({
+            url: 'https://api-adresse.data.gouv.fr/search/?q=' + encodeURIComponent(query),
+            type: 'GET',
+            error: function () {
+                callback();
+            },
+            success: function (res) {
+                var reformattedAddresses = [];
+                for (var i = 0; i < res.features.length; i++) {
+                    reformattedAddresses.push({
+                        lat: res.features[i].geometry.coordinates[0],
+                        long: res.features[i].geometry.coordinates[1],
+                        city: res.features[i].properties.city,
+                        context: res.features[i].properties.context,
+                        postCode: res.features[i].properties.postcode,
+                        name: res.features[i].properties.name,
+                        latLong: res.features[i].geometry.coordinates[1] + "|" + res.features[i].geometry.coordinates[0]
+                    })
+                }
+                self.clearOptions();
+                isCurrentHomeLocationActive = false;
+                callback(reformattedAddresses);
             }
-            console.log(reformattedAddresses);
-
-            // Return Fetched data
-            return reformattedAddresses;
-        },
-        key: ["name", "city", "context", "postcode"],
-        cache: false
+        });
     },
-    sort: (a, b) => {                    // Sort rendered results ascendingly | (Optional)
-        if (a.match < b.match) return -1;
-        if (a.match > b.match) return 1;
-        return 0;
-    },
-    placeHolder: "Adresse de votre domicile",     // Place Holder text                 | (Optional)
-    selector: "#searchAddresses",           // Input field selector              | (Optional)
-    threshold: 3,                        // Min. Chars length to start Engine | (Optional)
-    debounce: 300,                       // Post duration for engine to start | (Optional)
-    searchEngine: "strict",              // Search Engine type/mode           | (Optional)
-    resultsList: {                       // Rendered results list object      | (Optional)
-        render: true,
-        container: source => {
-            source.setAttribute("id", "searchAddressesList");
-        },
-        destination: document.querySelector("#searchAddresses"),
-        position: "afterend",
-        element: "ul"
-    },
-    maxResults: 5,                         // Max. number of rendered results | (Optional)
-    highlight: true,                       // Highlight matching results      | (Optional)
-    resultItem: {                          // Rendered result item            | (Optional)
-        content: (data, source) => {
-            source.innerHTML = data.match;
-        },
-        element: "li"
-    },
-    noResults: () => {                     // Action script on noResults      | (Optional)
-        const result = document.createElement("li");
-        result.setAttribute("class", "no_result");
-        result.setAttribute("tabindex", "1");
-        result.innerHTML = "No Results";
-        document.querySelector("#searchAddressesList").appendChild(result);
-    },
-    onSelection: feedback => {             // Action script onSelection event | (Optional)
-        console.log(feedback.selection.value.image_url);
+    onChange: function (value, isOnInitialize) {
+        if (value) {
+            drawCircleOnMap(parseLatLongFromSelect(value));
+        }
     }
 });
+
+function parseLatLongFromSelect(formattedValue) {
+    var lat = formattedValue.split("|")[0];
+    var long = formattedValue.split("|")[1];
+    return [lat, long];
+}
+
+function unitOrRangeChanged() {
+    if (!isCurrentHomeLocationActive) {
+        var selectizeControl = $select[0].selectize;
+        drawCircleOnMap(parseLatLongFromSelect(selectizeControl.getValue()));
+    }
+    else {
+        drawCircleOnMap(currentUserLocation);
+    }
+}
+
+function drawCircleOnMap(latLong) {
+    markersLayer.clearLayers();
+    var currentPosition = L.marker(latLong).addTo(markersLayer);
+    map.setView(latLong, 14);
+    L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(markersLayer);
+    map.addLayer(markersLayer);
+}
+
+function getRadius() {
+    var isKm = (document.getElementById("unit").value == "km") ? true : false;
+    var range = document.getElementById("range").value;
+    if (range < 0 || range > 1000) {
+        range = 1;
+    }
+    if (isKm) {
+        return range * 1000;
+    }
+    return range;
+}
 
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            let currentUserLocation = [
+            currentUserLocation = [
                 position.coords.latitude,
                 position.coords.longitude
             ];
-            var currentPosition = L.marker(currentUserLocation).addTo(map);
-            map.setView(currentUserLocation, 13);
-            L.circle(currentUserLocation, { radius: 1000, color: "green" }).addTo(map);
+            isCurrentHomeLocationActive = true;
+            drawCircleOnMap(currentUserLocation);
 
             /*var checkmark = L.tooltip({
                 permanent: true,

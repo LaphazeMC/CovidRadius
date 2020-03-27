@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.9/typicons.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css">
 
     <title>Carte bordure confinement COVID-19</title>
 </head>
 <body>
     <div class="flex flex-wrap">
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-1/4">
-            <div class="max-w-sm overflow-hidden shadow-lg">
+            <div class="w-full overflow-hidden shadow-lg">
                 <img class="w-full" src="https://www.pon-cat.com/application/files/7915/8400/2602/home-banner.jpg" alt="Sunset in the mountains">
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Bordure limite activités sportives</div>
@@ -22,20 +22,20 @@
                     </p>
                 </div>
             </div>
-            <div class="max-w-sm rounder shadow-lg w-full max-w-xs">
+            <div class="rounder shadow-lg w-full">
                 <form class="bg-white shadow-md rounded px-8 pl-6 pt-0 pb-8 mb-4">
                     <div class="flex">
                         <div class="w-full w:6/7">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="address">
                                 Adresse de votre domicile
                             </label>
                             <!--<input onchange="findAddresses()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 mb-2" id="address" type="text" placeholder="123 avenue..">-->
-                            <input id="searchAddresses" />
+                            <input autocomplete="off" id="searchAddresses" />
                         </div>
                         <div class="w:1/7 self-center mt-6 tooltip">
                             <div class="flex items-center justify-between">
                                 <span class='tooltip-text bg-black p-3 text-white -mt-8 -ml-6 rounded text-sm'>Se localiser</span>
-                                <button onclick="getCurrentLocation()" style="margin-top: -3px" class="bg-blue-500 hover:bg-blue-700 h-12 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" type="button">
+                                <button onclick="getCurrentLocation()" style="margin-top: -3px; height: 2.7rem" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" type="button">
                                     <div class="typcn icon typcn-location-outline"></div>
                                 </button>
                             </div>
@@ -44,19 +44,19 @@
                     </div>
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
                                 Distance
                             </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="number" placeholder="1" value="1">
+                            <input  onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="1" value="1">
                         </div>
                         <div class="w-full md:w-3/5 px-2 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="unit">
                                 Unité
                             </label>
                             <div class="relative">
-                                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option selected>Kilomètres</option>
-                                    <option>Mètres</option>
+                                <select onchange="unitOrRangeChanged()" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="unit">
+                                    <option selected value="km">Kilomètres</option>
+                                    <option value="m">Mètres</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="p-2 mt-4 bg-red-800 items-center mb-4 text-white leading-none lg:rounded-full flex lg:inline-flex" role="alert">
                             <span class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs mr-2">!</span>
-                            <span class="mr-2 text-center flex-auto">En france, la distance maximum est actuellement de 1 kilomètre</span>
+                            <span class="mr-2 text-center flex-auto">En france, la distance maximum autorisée est actuellement de 1 kilomètre</span>
                         </div>
                         <button onclick="generateRoad()" style="margin-top: -3px" class="cursor-not-allowed opacity-50 w-full bg-blue-500 hover:bg-blue-700 h-12 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" type="button">
                             Générer un chemin de sport
@@ -79,8 +79,12 @@
 
             </div>
         </div>
-        <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
-        <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
-        <script src="assets/js/main.js"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
