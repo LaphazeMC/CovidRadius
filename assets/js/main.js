@@ -28,6 +28,78 @@ window.onload = function () {
     initMap();
 };
 
+// autoComplete.js on typing event emitter
+document.querySelector("#searchAddresses").addEventListener("autoComplete", event => {
+    console.log(event);
+});
+
+const autocompleteJs = new autoComplete({
+    data: {                              // Data src [Array, Function, Async] | (REQUIRED)
+        src: async () => {
+            // User search query
+            const query = document.querySelector("#searchAddresses").value;
+            // Fetch External Data Source
+            const source = await fetch('https://api-adresse.data.gouv.fr/search/?q=' + query);
+            var data = await source.json();
+            // Format data into JSON
+            var reformattedAddresses = [];
+            for (var i = 0; i < data.features.length; i++) {
+                reformattedAddresses.push({
+                    lat: data.features[i].geometry.coordinates[0],
+                    long: data.features[i].geometry.coordinates[1],
+                    city: data.features[i].properties.city,
+                    context: data.features[i].properties.context,
+                    postCode: data.features[i].properties.postcode,
+                    name: data.features[i].properties.name
+                })
+            }
+            console.log(reformattedAddresses);
+
+            // Return Fetched data
+            return reformattedAddresses;
+        },
+        key: ["name", "city", "context", "postcode"],
+        cache: false
+    },
+    sort: (a, b) => {                    // Sort rendered results ascendingly | (Optional)
+        if (a.match < b.match) return -1;
+        if (a.match > b.match) return 1;
+        return 0;
+    },
+    placeHolder: "Adresse de votre domicile",     // Place Holder text                 | (Optional)
+    selector: "#searchAddresses",           // Input field selector              | (Optional)
+    threshold: 3,                        // Min. Chars length to start Engine | (Optional)
+    debounce: 300,                       // Post duration for engine to start | (Optional)
+    searchEngine: "strict",              // Search Engine type/mode           | (Optional)
+    resultsList: {                       // Rendered results list object      | (Optional)
+        render: true,
+        container: source => {
+            source.setAttribute("id", "searchAddressesList");
+        },
+        destination: document.querySelector("#searchAddresses"),
+        position: "afterend",
+        element: "ul"
+    },
+    maxResults: 5,                         // Max. number of rendered results | (Optional)
+    highlight: true,                       // Highlight matching results      | (Optional)
+    resultItem: {                          // Rendered result item            | (Optional)
+        content: (data, source) => {
+            source.innerHTML = data.match;
+        },
+        element: "li"
+    },
+    noResults: () => {                     // Action script on noResults      | (Optional)
+        const result = document.createElement("li");
+        result.setAttribute("class", "no_result");
+        result.setAttribute("tabindex", "1");
+        result.innerHTML = "No Results";
+        document.querySelector("#searchAddressesList").appendChild(result);
+    },
+    onSelection: feedback => {             // Action script onSelection event | (Optional)
+        console.log(feedback.selection.value.image_url);
+    }
+});
+
 function getCurrentLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
