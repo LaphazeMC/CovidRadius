@@ -8,9 +8,10 @@ main {
     flex: 1; /* Or flex-grow: 1;*/
 }
 
-#map{
+#map {
     height: 100%;
     width: 100%;
+    min-height: 600px;
 }
 
 .tooltip .tooltip-text {
@@ -24,6 +25,7 @@ main {
 .tooltip:hover .tooltip-text {
     visibility: visible;
 }
+
 .selectize-control .selectize-dropdown > div {
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
@@ -104,14 +106,13 @@ main {
 }
 
     .selectize-control .selectize-input .item,
-    .selectize-control .selectize-input input
-    {
+    .selectize-control .selectize-input input {
         color: #4a5568 !important;
         line-height: 1.25 !important;
         font-size: 1rem !important;
     }
 
 /* needed for selectize select forced value without search result */
-#searchAddresses-selectized{
+#searchAddresses-selectized {
     width: 100% !important;
 }

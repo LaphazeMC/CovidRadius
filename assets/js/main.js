@@ -5,6 +5,8 @@ var homeMarkersLayer = L.featureGroup();
 var currentLocationMarkerLayer = L.featureGroup();
 var currentUserLocation = [];
 var isCurrentHomeLocationActive = false;
+var isFirstRefreshOfCurrentUserLocation = true;
+var watchCurrentUserLocation = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -72,6 +74,7 @@ var $select = $('#searchAddresses').selectize({
                 callback();
             },
             success: function (res) {
+                // GOV API return data in nested child, so it's needed to reformat the data property in one level only for selectize
                 var reformattedAddresses = [];
                 for (var i = 0; i < res.features.length; i++) {
                     reformattedAddresses.push({
@@ -114,7 +117,9 @@ function unitOrRangeChanged() {
 }
 
 function drawCircleOnMap(latLong, isHome) {
-    map.setView(latLong, 14);
+    if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
+        map.setView(latLong, 14);
+    }
     if (isHome) {
         homeMarkersLayer.clearLayers();
         L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
@@ -152,35 +157,66 @@ function getRadius() {
 
 function getCurrentLocation(isHome) {
     if (isHome) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                currentUserLocation = [
-                    position.coords.latitude,
-                    position.coords.longitude
-                ];
-                isCurrentHomeLocationActive = true;
-                var selectizeControl = $select[0].selectize;
-                selectizeControl.clear()
-                document.getElementById("searchAddresses-selectized").value = "Position actuelle";
-                drawCircleOnMap(currentUserLocation, isHome);
-            })
+        if (watchCurrentUserLocation == null) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    currentUserLocation = [
+                        position.coords.latitude,
+                        position.coords.longitude
+                    ];
+                    isCurrentHomeLocationActive = true;
+                    var selectizeControl = $select[0].selectize;
+                    selectizeControl.clear()
+                    document.getElementById("searchAddresses-selectized").value = "Position actuelle";
+                    drawCircleOnMap(currentUserLocation, isHome);
+                },
+                    function (error) {
+                        handleLocationRequestError(error);
+                    }),
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 50000 }
+            }
+        }
+        else { // If current user location was already requested by watchPosition, just take latLong from there
+            var selectizeControl = $select[0].selectize;
+            selectizeControl.clear()
+            document.getElementById("searchAddresses-selectized").value = "Position actuelle";
+            drawCircleOnMap(currentUserLocation, isHome);
         }
     }
     else {
-        var watchCurrentUserLocation = navigator.geolocation.watchPosition(function (position) {
+        watchCurrentUserLocation = navigator.geolocation.watchPosition(function (position) {
             currentUserLocation = [
                 position.coords.latitude,
                 position.coords.longitude
             ];
             // don't blame me for this :(
-            document.getElementById("currentLocationButton").classList.remove("bg-blue-500");
-            document.getElementById("currentLocationButton").classList.remove("hover:bg-blue-700");
-            document.getElementById("currentLocationButton").classList.add("opacity-50");
-            document.getElementById("currentLocationButton").classList.add("cursor-not-allowed");
-            document.getElementById("currentLocationButton").classList.add("bg-green-500");
-            document.getElementById("currentLocationButton").classList.add("hover:bg-green-700");
-            document.getElementById("currentLocationButton").innerHTML = "Position actuelle récupérée";
+            var currentLocationButton = document.getElementById("currentLocationButton");
+            currentLocationButton.classList.remove("bg-blue-500");
+            currentLocationButton.classList.remove("hover:bg-blue-700");
+            currentLocationButton.classList.add("opacity-50");
+            currentLocationButton.classList.add("cursor-not-allowed");
+            currentLocationButton.classList.add("bg-green-500");
+            currentLocationButton.classList.add("hover:bg-green-700");
+            currentLocationButton.innerHTML = "Position actuelle récupérée";
             drawCircleOnMap(currentUserLocation, isHome);
-        });
+            if (isFirstRefreshOfCurrentUserLocation) {
+                isFirstRefreshOfCurrentUserLocation = false;
+            }
+        },
+            function (error) {
+                handleLocationRequestError(error);
+            })
+    }
+
+    function handleLocationRequestError(error) {
+        if (error.code == 1) {
+            alert("La permission de localisation n'a pas été autorisée");
+        }
+        else if (error.code == 2) {
+            alert("Impossible de récupérer la position")
+        }
+        else {
+            alert(error + " | " + error.message + " | " + error.code);
+        }
     }
 }
