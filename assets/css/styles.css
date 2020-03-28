@@ -1,3 +1,13 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Or flex-grow: 1;*/
+}
+
 #map{
     height: 100%;
     width: 100%;
