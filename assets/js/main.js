@@ -1,9 +1,21 @@
-var defaultLat = 45.1667;
-var defaultLong = 5.7167;
+var defaultLat = 46.5;
+var defaultLong = 4.5;
 var map = null;
-var markersLayer = L.featureGroup();
+var homeMarkersLayer = L.featureGroup();
+var currentLocationMarkerLayer = L.featureGroup();
 var currentUserLocation = [];
 var isCurrentHomeLocationActive = false;
+
+L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
+var homeMarker = L.AwesomeMarkers.icon({
+    icon: 'home',
+    markerColor: 'blue'
+});
+var userMarker = L.AwesomeMarkers.icon({
+    icon: 'person',
+    markerColor: 'red'
+});
+
 function initMap() {
     var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -16,7 +28,7 @@ function initMap() {
     map = L.map('map', {
         center: [defaultLat, defaultLong],
         center: [defaultLat, defaultLong],
-        zoom: 10,
+        zoom: 6,
         layers: [streets]
     });
 
@@ -73,14 +85,14 @@ var $select = $('#searchAddresses').selectize({
                     })
                 }
                 self.clearOptions();
-                isCurrentHomeLocationActive = false;
                 callback(reformattedAddresses);
             }
         });
     },
     onChange: function (value, isOnInitialize) {
         if (value) {
-            drawCircleOnMap(parseLatLongFromSelect(value));
+            isCurrentHomeLocationActive = false;
+            drawCircleOnMap(parseLatLongFromSelect(value), true);
         }
     }
 });
@@ -94,19 +106,36 @@ function parseLatLongFromSelect(formattedValue) {
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
         var selectizeControl = $select[0].selectize;
-        drawCircleOnMap(parseLatLongFromSelect(selectizeControl.getValue()));
+        drawCircleOnMap(parseLatLongFromSelect(selectizeControl.getValue()), true);
     }
     else {
-        drawCircleOnMap(currentUserLocation);
+        drawCircleOnMap(currentUserLocation, true);
     }
 }
 
-function drawCircleOnMap(latLong) {
-    markersLayer.clearLayers();
-    var currentPosition = L.marker(latLong).addTo(markersLayer);
+function drawCircleOnMap(latLong, isHome) {
     map.setView(latLong, 14);
-    L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(markersLayer);
-    map.addLayer(markersLayer);
+    if (isHome) {
+        homeMarkersLayer.clearLayers();
+        L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
+            {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -40]
+            }).addTo(homeMarkersLayer);
+        L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(homeMarkersLayer);
+        map.addLayer(homeMarkersLayer);
+    }
+    else { // current user location 
+        currentLocationMarkerLayer.clearLayers();
+        L.marker(latLong, { icon: userMarker }).bindTooltip("Vous",
+            {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -40]
+            }).addTo(currentLocationMarkerLayer);
+        map.addLayer(currentLocationMarkerLayer);
+    }
 }
 
 function getRadius() {
@@ -121,25 +150,37 @@ function getRadius() {
     return range;
 }
 
-function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
+function getCurrentLocation(isHome) {
+    if (isHome) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                currentUserLocation = [
+                    position.coords.latitude,
+                    position.coords.longitude
+                ];
+                isCurrentHomeLocationActive = true;
+                var selectizeControl = $select[0].selectize;
+                selectizeControl.clear()
+                document.getElementById("searchAddresses-selectized").value = "Position actuelle";
+                drawCircleOnMap(currentUserLocation, isHome);
+            })
+        }
+    }
+    else {
+        var watchCurrentUserLocation = navigator.geolocation.watchPosition(function (position) {
             currentUserLocation = [
                 position.coords.latitude,
                 position.coords.longitude
             ];
-            isCurrentHomeLocationActive = true;
-            drawCircleOnMap(currentUserLocation);
-
-            /*var checkmark = L.tooltip({
-                permanent: true,
-                direction: 'center',
-                className: 'text'
-            })
-                .setContent("✔️")
-                .setLatLng(currentUserLocation);
-            checkmark.addTo(map);*/
-
-        })
+            // don't blame me for this :(
+            document.getElementById("currentLocationButton").classList.remove("bg-blue-500");
+            document.getElementById("currentLocationButton").classList.remove("hover:bg-blue-700");
+            document.getElementById("currentLocationButton").classList.add("opacity-50");
+            document.getElementById("currentLocationButton").classList.add("cursor-not-allowed");
+            document.getElementById("currentLocationButton").classList.add("bg-green-500");
+            document.getElementById("currentLocationButton").classList.add("hover:bg-green-700");
+            document.getElementById("currentLocationButton").innerHTML = "Position actuelle récupérée";
+            drawCircleOnMap(currentUserLocation, isHome);
+        });
     }
 }
