@@ -8,6 +8,7 @@ var isCurrentHomeLocationActive = false;
 var isFirstRefreshOfCurrentUserLocation = true;
 var watchCurrentUserLocation = null;
 var isUserInHomePerimeter = false;
+var polygonArray = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -110,16 +111,42 @@ function parseLatLongFromSelect(formattedValue) {
 
 function updateUserLocationIsInsideHomeRadius() {
     if (homeMarkersLayer._layers != null && watchCurrentUserLocation) {
-        var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
-        var radius = homeCircle.getRadius(); //get home circle radius in metter
-        var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
-        isUserInHomePerimeter = Math.abs(circleCenterPoint.distanceTo(currentUserLocation)) <= radius;
+        var homeLayers = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
+        var homePolygonShape = homeLayers._layers[Object.keys(homeLayers._layers)[0]];
+        //var radius = homeCircle.getRadius(); //get home circle radius in metter
+        //var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
+        //isUserInHomePerimeter = Math.abs(circleCenterPoint.distanceTo(currentUserLocation)) <= radius;
+        //console.log(currentUserLocation);
+        //console.log(homePolygonShape);
+        //console.log(homePolygonShape.contains(currentUserLocation));
+        //console.log(homePolygonShape.getBounds().contains(currentUserLocation));
+        //isUserInHomePerimeter = isMarkerInsidePolygon(homePolygonShape, currentUserLocation[0], currentUserLocation[1]);
+        isUserInHomePerimeter = homePolygonShape.getBounds().contains(currentUserLocation);
         displayAlertMapMessage(true);
     }
     else {
         displayAlertMapMessage(false);
     }
 }
+
+function isMarkerInsidePolygon(polygon, lat, long) {
+    var inside = false;
+    var polyPoints = polygonArray;
+    var x = lat;
+    var y = long;
+
+    var inside = false;
+    for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+        var xi = polyPoints[i][0], yi = polyPoints[i][1];
+        var xj = polyPoints[j][0], yj = polyPoints[j][1];
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+        console.log(xi + "/" + xj + "/" + yi + "/" + yj);
+    }
+
+    return inside;
+};
 
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
@@ -143,7 +170,27 @@ function drawCircleOnMap(latLong, isHome) {
                 direction: 'top',
                 offset: [0, -40]
             }).addTo(homeMarkersLayer);
-        L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(homeMarkersLayer);
+        //L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(homeMarkersLayer);
+        Gp.Services.isoCurve({
+            position: {
+                x: latLong[1],
+                y: latLong[0]
+            },
+            color: "green",
+            distance: getRadius(),
+            graph: "Pieton",
+            reverse: false,
+            smoothing: true,
+            apiKey: "choisirgeoportail",
+            onSuccess: function (result) {
+                console.log(result.geometry.coordinates[0]);
+                polygonArray = result.geometry.coordinates[0];
+                L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
+            },
+            onFailure: function (error) {
+                console.log(error);
+            }
+        });
         map.addLayer(homeMarkersLayer);
     }
     else { // current user location 
