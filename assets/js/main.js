@@ -26,13 +26,13 @@ function initMap() {
     var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
     satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
         dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
-
     map = L.map('map', {
         center: [defaultLat, defaultLong],
         center: [defaultLat, defaultLong],
         zoom: 6,
         layers: [streets]
     });
+    L.control.scale({ imperial: false }).addTo(map);
 
     var baseLayers = {
         "Satellite": satellite,
@@ -146,7 +146,8 @@ function drawCircleOnMap(latLong, isHome) {
 function getRadius() {
     var isKm = (document.getElementById("unit").value == "km") ? true : false;
     var range = document.getElementById("range").value;
-    if (range < 0 || range > 1000) {
+    if (((range < 0 || range > 1000) && isKm) || (range < 0 && range > 1000000) && !isKm) {
+        document.getElementById("range").value = 1;
         range = 1;
     }
     if (isKm) {
