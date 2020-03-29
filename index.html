@@ -26,7 +26,7 @@
     <main class="flex flex-wrap">
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-1/4">
             <div class="w-full overflow-hidden shadow-lg">
-                <img class="w-full" src="https://www.pon-cat.com/application/files/7915/8400/2602/home-banner.jpg" alt="COVID-19 Baneer">
+                <img class="w-full border border-black-gray p-2" src="assets/images/baneer.png" alt="COVID-19 Baneer">
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Bordure limite des activités sportives</div>
                     <p class="text-gray-700 text-base">
@@ -87,8 +87,9 @@
             </div>
         </div>
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-3/4 mx-4 sm:mb-2 md:mx-0 lg:mx-0 lg:mb-0">
+            <div id="insideRadiusMessage" class="relative text-center bg-green-500 text-white hidden"><i class="ion-checkmark-round"></i> Vous êtes dans le périmètre du confinement</div>
+            <div id="outsideRadiusMessage" class="relative text-center bg-red-500 text-white hidden"><i class="ion-alert-circled"></i> Attention vous n'êtes pas dans le périmètre du confinement</div>
             <div id="map" class="z-10">
-
             </div>
         </div>
     </main>
