@@ -40,6 +40,7 @@ function initMap() {
         "Night": dark
     };
     L.control.layers(baseLayers).addTo(map);
+
 }
 window.onload = function () {
     initMap();
@@ -104,6 +105,13 @@ function parseLatLongFromSelect(formattedValue) {
     var lat = formattedValue.split("|")[0];
     var long = formattedValue.split("|")[1];
     return [lat, long];
+}
+
+function isUserLocationInsideHomeRadius() {
+    var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]].getRadius(); 
+    var radius = homeCircle.getRadius(); //get home circle radius in metter
+    var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
+    var isInCircleRadius = abs(circleCenterPoint.distanceTo(currentUserLocation)) <= radius;
 }
 
 function unitOrRangeChanged() {
