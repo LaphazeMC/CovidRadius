@@ -44,6 +44,10 @@ main {
     margin-right: 5px;
 }
 
+.selectize-control.single .selectize-input:after{
+    display: none !important;
+}
+
 .selectize-control .selectize-dropdown .title {
     display: block;
 }

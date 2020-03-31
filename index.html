@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link href="assets/css/styles.css" rel="stylesheet" />
+    <link href="assets/css/styles.css?v=14" rel="stylesheet" />
     <link rel="icon" type="image/png" href="assets/images/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-2/6">
             <div class="w-full overflow-hidden shadow-lg">
                 <div class="w-full border border-black-gray p-2 text-center">
-                    <img class="max-w-screen-sm self-center" src="assets/images/baneer.png" alt="COVID-19 Baneer">
+                    <img class="self-center xs:full-w" src="assets/images/baneer.png" alt="COVID-19 Baneer">
                 </div>
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Bordure limite des activités sportives 🇫🇷</div>
@@ -65,6 +65,9 @@
                     <button onclick="getCurrentLocation(false)" id="currentLocationButton" class="w-full mt-2 mb-2 bg-blue-500 hover:bg-blue-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
                         <span class="ion-ios-location"></span> Me localiser sur la carte
                     </button>
+                    <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
+                        <span class="ion-play"></span> Démarrer l'activité journalière (1H)
+                    </button>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
@@ -96,21 +99,28 @@
                 </form>
             </div>
         </div>
-        <div class="w-full sm:w-1/1 md:w-1/2 lg:w-4/6 mx-4 sm:mb-2 md:mx-0 lg:mx-0 lg:mb-0">
-            <div id="map" class="z-10">
+        <div class="w-full sm:w-1/1 md:w-1/2 lg:w-4/6 mx-4 sm:mb-2 md:mx-0 lg:mx-0 lg:mb-0 relative">
+            <div class="bottom-0 absolute" style="left: 50%">
+                <div style="left: -50%;" class="relative">
+                    <div id="activityTimer" class="w-auto h-auto p-2 z-50 relative bottom-0 text-center text-white bg-green-600 font-bold border border-gray-200 rounded p-2 leading-tight focus:border-gray-500 self-center hidden">
+                        <i class="ion-android-alarm-clock"></i>
+                        <span id="timerLeftActivity"></span>
+                    </div>
+                </div>
             </div>
+            <div id="map" class="z-10"></div>
         </div>
         <button onclick="topFunction()" id="scrollTopButton" title="Retour en haut de page"><span class="ion-arrow-up-c"></span></button>
     </main>
     <div id="insideRadiusMessage" class="w-full z-50 fixed text-center bg-green-600 text-white hidden"><i class="ion-checkmark-round"></i> Vous êtes dans le périmètre du confinement</div>
     <div id="outsideRadiusMessage" class="w-full z-50 fixed text-center bg-red-600 text-white hidden"><i class="ion-alert-circled"></i> Attention vous n'êtes pas dans le périmètre du confinement</div>
     <footer class="w-full bg-gray-800 p-2 text-white text-center text-xs mt-4 lg:mt-0">
-        Développé avec ❤️ par Maxime Girard - Aucune donnée n'est stockée ni récupérée -
+        Développé avec ❤️ par Maxime Girard sur une 💡 de Loïc Bouvet - Aucune donnée n'est stockée ni récupérée -
         <a class="text-blue-600 tooltip" href="mailto:contact@covidradius.info">
             Contact
             <span style="margin-left: -100px" class='tooltip-text bg-black p-3 text-white -mt-8 rounded text-sm z-50'>contact@covidradius.info</span>
         </a> -
-        <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source disponible sur Github</a>
+        <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source</a>
     </footer>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -120,7 +130,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script type="text/javascript" src="https://ignf.github.io/geoportal-extensions/leaflet-latest/dist/GpPluginLeaflet.js"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=16"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>

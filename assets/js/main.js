@@ -9,6 +9,7 @@ var isFirstRefreshOfCurrentUserLocation = true;
 var watchCurrentUserLocation = null;
 var isUserInHomePerimeter = false;
 var polygonArray = null;
+var activityTimer = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -21,13 +22,11 @@ var userMarker = L.AwesomeMarkers.icon({
 });
 
 function initMap() {
-    var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+    var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
-    var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
-    satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
-        dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
+    var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 });
+    satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1 }),
+        dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1 });
     map = L.map('map', {
         center: [defaultLat, defaultLong],
         center: [defaultLat, defaultLong],
@@ -42,7 +41,7 @@ function initMap() {
         "Night": dark
     };
     L.control.layers(baseLayers).addTo(map);
-
+    document.getElementsByClassName("leaflet-control-attribution")[0].remove();
 }
 window.onload = function () {
     initMap();
@@ -98,6 +97,7 @@ var $select = $('#searchAddresses').selectize({
     onChange: function (value, isOnInitialize) {
         if (value) {
             isCurrentHomeLocationActive = false;
+            document.getElementById("currentLocationButton").classList.remove("hidden");
             drawCircleOnMap(parseLatLongFromSelect(value), true);
         }
     }
@@ -113,14 +113,6 @@ function updateUserLocationIsInsideHomeRadius() {
     if (homeMarkersLayer._layers != null && watchCurrentUserLocation) {
         var homeLayers = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
         var homePolygonShape = homeLayers._layers[Object.keys(homeLayers._layers)[0]];
-        //var radius = homeCircle.getRadius(); //get home circle radius in metter
-        //var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
-        //isUserInHomePerimeter = Math.abs(circleCenterPoint.distanceTo(currentUserLocation)) <= radius;
-        //console.log(currentUserLocation);
-        //console.log(homePolygonShape);
-        //console.log(homePolygonShape.contains(currentUserLocation));
-        //console.log(homePolygonShape.getBounds().contains(currentUserLocation));
-        //isUserInHomePerimeter = isMarkerInsidePolygon(homePolygonShape, currentUserLocation[0], currentUserLocation[1]);
         isUserInHomePerimeter = homePolygonShape.getBounds().contains(currentUserLocation);
         displayAlertMapMessage(true);
     }
@@ -129,24 +121,23 @@ function updateUserLocationIsInsideHomeRadius() {
     }
 }
 
-function isMarkerInsidePolygon(polygon, lat, long) {
-    var inside = false;
-    var polyPoints = polygonArray;
-    var x = lat;
-    var y = long;
+//function isMarkerInsidePolygon(polygon, lat, long) {
+//    var inside = false;
+//    var polyPoints = polygonArray;
+//    var x = lat;
+//    var y = long;
 
-    var inside = false;
-    for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-        var xi = polyPoints[i][0], yi = polyPoints[i][1];
-        var xj = polyPoints[j][0], yj = polyPoints[j][1];
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if (intersect) inside = !inside;
-        console.log(xi + "/" + xj + "/" + yi + "/" + yj);
-    }
+//    var inside = false;
+//    for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+//        var xi = polyPoints[i][0], yi = polyPoints[i][1];
+//        var xj = polyPoints[j][0], yj = polyPoints[j][1];
+//        var intersect = ((yi > y) != (yj > y))
+//            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+//        if (intersect) inside = !inside;
+//    }
 
-    return inside;
-};
+//    return inside;
+//};
 
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
@@ -170,7 +161,6 @@ function drawCircleOnMap(latLong, isHome) {
                 direction: 'top',
                 offset: [0, -40]
             }).addTo(homeMarkersLayer);
-        //L.circle(latLong, { radius: getRadius(), color: "green" }).addTo(homeMarkersLayer);
         Gp.Services.isoCurve({
             position: {
                 x: latLong[1],
@@ -185,6 +175,7 @@ function drawCircleOnMap(latLong, isHome) {
             onSuccess: function (result) {
                 polygonArray = result.geometry.coordinates[0];
                 L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
+                L.circle(latLong, { radius: getRadius(), color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
                 updateUserLocationIsInsideHomeRadius();
             },
             onFailure: function (error) {
@@ -207,11 +198,11 @@ function drawCircleOnMap(latLong, isHome) {
 }
 
 function displayAlertMapMessage(isActive) {
-    console.log(isActive + "/ " + isUserInHomePerimeter);
     if (isActive) {
         if (isUserInHomePerimeter) {
             document.getElementById("insideRadiusMessage").classList.remove("hidden");
             document.getElementById("outsideRadiusMessage").classList.add("hidden");
+            window.navigator.vibrate(200);
         }
         else {
             document.getElementById("insideRadiusMessage").classList.add("hidden");
@@ -235,6 +226,70 @@ function getRadius() {
         return range * 1000;
     }
     return range;
+}
+
+Date.prototype.addHours = function (h) {
+    this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+    return this;
+}
+
+function startActivityTimer() {
+    if (!activityTimer) {
+        var nextHourTime = new Date().addHours(1).getTime();
+        var isHalfTime = false;
+        var isCloseEndTime = false;
+        document.getElementById("activityTimer").classList.remove("hidden");
+        document.getElementById("activityTimerButton").innerHTML = "<span class='ion-pause'></span> Arrêter l'activité journalière";
+        document.getElementById("activityTimerButton").classList.remove("bg-green-500");
+        document.getElementById("activityTimerButton").classList.remove("hover:bg-green-700");
+        document.getElementById("activityTimerButton").classList.add("bg-orange-600");
+        document.getElementById("activityTimerButton").classList.add("hover:bg-orange-700");
+        document.getElementById("timerLeftActivity").innerText = "1h:00:00";
+        document.getElementById("activityTimer").classList.add("bg-green-600");
+        activityTimer = setInterval(function () {
+
+            var now = new Date().getTime();
+
+            // Find the distance between now an the count down date
+            var distance = nextHourTime - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timerLeftActivity").innerText = minutes + ":" + seconds.toString().padStart(2, '0');
+
+            if (minutes < 30 && !isHalfTime) {
+                document.getElementById("activityTimer").classList.remove("bg-green-600");
+                document.getElementById("activityTimer").classList.add("bg-orange-600");
+                isHalfTime = true;
+            }
+
+            if (minutes < 15 && !isCloseEndTime) {
+                document.getElementById("activityTimer").classList.remove("bg-orange-600");
+                document.getElementById("activityTimer").classList.add("bg-red-600");
+                isHalfTime = isCloseEndTime;
+            }
+
+            if (distance < 0) {
+                clearInterval(activityTimer);
+                document.getElementById("activityTimer").classList.add("hidden");
+                document.getElementById("timerLeftActivity").classList.remove("bg-red-600");
+                window.navigator.vibrate(200);
+            }
+        }, 1000);
+    }
+    else {
+        clearInterval(activityTimer);
+        activityTimer = null;
+        document.getElementById("activityTimer").classList.add("hidden");
+        document.getElementById("activityTimerButton").innerHTML = "<span class='ion-play'></span> Démarrer l'activité journalière (1H)";
+        document.getElementById("activityTimerButton").classList.add("bg-green-500");
+        document.getElementById("activityTimerButton").classList.add("hover:bg-green-700");
+        document.getElementById("activityTimerButton").classList.remove("bg-orange-600");
+        document.getElementById("activityTimerButton").classList.remove("hover:bg-orange-700");
+    }
 }
 
 function getCurrentLocation(isHome) {
@@ -273,16 +328,12 @@ function getCurrentLocation(isHome) {
                 position.coords.latitude,
                 position.coords.longitude
             ];
-            // don't blame me for this :(
             var currentLocationButton = document.getElementById("currentLocationButton");
-            currentLocationButton.classList.remove("bg-blue-500");
-            currentLocationButton.classList.remove("hover:bg-blue-700");
             currentLocationButton.classList.add("opacity-50");
             currentLocationButton.classList.add("cursor-not-allowed");
-            currentLocationButton.classList.add("bg-green-500");
-            currentLocationButton.classList.add("hover:bg-green-700");
             currentLocationButton.innerHTML = "<span class='ion-android-checkmark-circle'> Localisation en temps réel établie</span>";
             drawCircleOnMap(currentUserLocation, isHome);
+            document.getElementById("activityTimerButton").classList.remove("hidden");
             if (isFirstRefreshOfCurrentUserLocation) {
                 isFirstRefreshOfCurrentUserLocation = false;
                 if (isBrowserMobile()) {
@@ -294,6 +345,7 @@ function getCurrentLocation(isHome) {
                 handleLocationRequestError(error);
             })
     }
+
 
     function handleLocationRequestError(error) {
         if (error.code == 1) {
