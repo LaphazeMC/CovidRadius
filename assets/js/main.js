@@ -202,11 +202,11 @@ function displayAlertMapMessage(isActive) {
         if (isUserInHomePerimeter) {
             document.getElementById("insideRadiusMessage").classList.remove("hidden");
             document.getElementById("outsideRadiusMessage").classList.add("hidden");
-            window.navigator.vibrate(200);
         }
         else {
             document.getElementById("insideRadiusMessage").classList.add("hidden");
             document.getElementById("outsideRadiusMessage").classList.remove("hidden");
+            window.navigator.vibrate(200);
         }
     }
     else {
