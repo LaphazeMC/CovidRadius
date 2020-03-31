@@ -183,9 +183,9 @@ function drawCircleOnMap(latLong, isHome) {
             smoothing: true,
             apiKey: "choisirgeoportail",
             onSuccess: function (result) {
-                console.log(result.geometry.coordinates[0]);
                 polygonArray = result.geometry.coordinates[0];
                 L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
+                updateUserLocationIsInsideHomeRadius();
             },
             onFailure: function (error) {
                 console.log(error);
@@ -202,8 +202,8 @@ function drawCircleOnMap(latLong, isHome) {
                 offset: [0, -40]
             }).addTo(currentLocationMarkerLayer);
         map.addLayer(currentLocationMarkerLayer);
+        updateUserLocationIsInsideHomeRadius();
     }
-    updateUserLocationIsInsideHomeRadius();
 }
 
 function displayAlertMapMessage(isActive) {
@@ -250,6 +250,7 @@ function getCurrentLocation(isHome) {
                     var selectizeControl = $select[0].selectize;
                     selectizeControl.clear()
                     document.getElementById("searchAddresses-selectized").value = "Position actuelle";
+                    document.getElementById("currentLocationButton").classList.remove("hidden");
                     drawCircleOnMap(currentUserLocation, isHome);
                 },
                     function (error) {
@@ -262,6 +263,7 @@ function getCurrentLocation(isHome) {
             var selectizeControl = $select[0].selectize;
             selectizeControl.clear()
             document.getElementById("searchAddresses-selectized").value = "Position actuelle";
+            document.getElementById("currentLocationButton").classList.remove("hidden");
             drawCircleOnMap(currentUserLocation, isHome);
         }
     }
