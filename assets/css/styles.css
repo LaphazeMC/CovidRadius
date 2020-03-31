@@ -11,7 +11,7 @@ main {
 #map {
     height: 100%;
     width: 100%;
-    min-height: 600px;
+    min-height: 400px;
 }
 
 .tooltip .tooltip-text {
@@ -136,7 +136,7 @@ main {
     background-color: #555; /* Set a background color */
     color: white; /* Text color */
     cursor: pointer; /* Add a mouse pointer on hover */
-    padding: 15px 20px; /* Some padding */
+    padding: 10px 15px; /* Some padding */
     border-radius: 10px; /* Rounded corners */
     font-size: 18px; /* Increase font size */
 }
