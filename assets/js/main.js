@@ -8,7 +8,6 @@ var isCurrentHomeLocationActive = false;
 var isFirstRefreshOfCurrentUserLocation = true;
 var watchCurrentUserLocation = null;
 var isUserInHomePerimeter = false;
-var polygonArray = null;
 var activityTimer = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
@@ -121,24 +120,6 @@ function updateUserLocationIsInsideHomeRadius() {
     }
 }
 
-//function isMarkerInsidePolygon(polygon, lat, long) {
-//    var inside = false;
-//    var polyPoints = polygonArray;
-//    var x = lat;
-//    var y = long;
-
-//    var inside = false;
-//    for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-//        var xi = polyPoints[i][0], yi = polyPoints[i][1];
-//        var xj = polyPoints[j][0], yj = polyPoints[j][1];
-//        var intersect = ((yi > y) != (yj > y))
-//            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-//        if (intersect) inside = !inside;
-//    }
-
-//    return inside;
-//};
-
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
         var selectizeControl = $select[0].selectize;
@@ -173,13 +154,12 @@ function drawCircleOnMap(latLong, isHome) {
             smoothing: true,
             apiKey: "choisirgeoportail",
             onSuccess: function (result) {
-                polygonArray = result.geometry.coordinates[0];
                 L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
                 L.circle(latLong, { radius: getRadius(), color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
                 updateUserLocationIsInsideHomeRadius();
             },
             onFailure: function (error) {
-                console.log(error);
+                alert(error);
             }
         });
         map.addLayer(homeMarkersLayer);
