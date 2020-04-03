@@ -23,10 +23,10 @@ var userMarker = L.AwesomeMarkers.icon({
 
 function initMap() {
     var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-
-    var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 });
-    satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1 }),
-        dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1 });
+    var mbAttr = 'Map &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, ' + 'Mapbox© <a href="https://www.mapbox.com/"></a>';
+    var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
+    satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
+        dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
     map = L.map('map', {
         center: [defaultLat, defaultLong],
         center: [defaultLat, defaultLong],
@@ -41,7 +41,6 @@ function initMap() {
         "Night": dark
     };
     L.control.layers(baseLayers).addTo(map);
-    document.getElementsByClassName("leaflet-control-attribution")[0].remove();
 }
 window.onload = function () {
     initMap();
