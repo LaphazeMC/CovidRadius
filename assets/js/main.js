@@ -9,6 +9,7 @@ var isFirstRefreshOfCurrentUserLocation = true;
 var watchCurrentUserLocation = null;
 var isUserInHomePerimeter = false;
 var activityTimer = null;
+//var lastPosition = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -198,7 +199,7 @@ function displayAlertMapMessage(isActive) {
 function getRadius() {
     var isKm = (document.getElementById("unit").value == "km") ? true : false;
     var range = document.getElementById("range").value;
-    if (((range < 0 || range > 1000) && isKm) || (range < 0 && range > 1000000) && !isKm) {
+    if (((range < 0 || range > 20) && isKm) || (range < 0 && range > 200000) && !isKm) {
         document.getElementById("range").value = 1;
         range = 1;
     }
@@ -263,6 +264,9 @@ function startActivityTimer() {
     else {
         clearInterval(activityTimer);
         activityTimer = null;
+       /* lastPosition = null;
+        document.getElementById("tripMeterDistance").innerText = "0.000 km";
+        document.getElementById("tripMeter").classList.add("hidden");*/
         document.getElementById("activityTimer").classList.add("hidden");
         document.getElementById("activityTimerButton").innerHTML = "<span class='ion-play'></span> Démarrer l'activité journalière (1H)";
         document.getElementById("activityTimerButton").classList.add("bg-green-500");
@@ -303,11 +307,35 @@ function getCurrentLocation(isHome) {
         }
     }
     else {
+        //lastPosition = null;
+        var options = {
+            enableHighAccuracy: true, timeout: Infinity, maximumAge: 0,
+        };
         watchCurrentUserLocation = navigator.geolocation.watchPosition(function (position) {
+            //if (lastPosition == null) {
+            //    lastPosition = position;
+            //}
             currentUserLocation = [
                 position.coords.latitude,
                 position.coords.longitude
             ];
+            if (activityTimer) {
+                //if (document.getElementById("tripMeter").classList.contains("hidden")) {
+                //    document.getElementById("tripMeter").classList.remove("hidden");
+                //}
+                //if (position.coords.accuracy < 100) {
+                //    var distanceInKms = (parseFloat(document.getElementById("tripMeterDistance").innerText.split(" ")[0]) + calculateDistance(lastPosition.coords.latitude, lastPosition.coords.longitude, position.coords.latitude, position.coords.longitude)).toFixed(3);
+                //    document.getElementById("tripMeterDistance").innerText = (distanceInKms <= 1) ? distanceInKms + " km" : distanceInKms + " kms";
+                //    lastPosition = position;
+                //}
+            }
+            else {
+                /*if (!document.getElementById("tripMeter").classList.contains("hidden")) {
+                    lastPosition = null;
+                    document.getElementById("tripMeterDistance").innerText = "0.000 km";
+                    document.getElementById("tripMeter").classList.add("hidden");
+                }*/
+            }
             var currentLocationButton = document.getElementById("currentLocationButton");
             currentLocationButton.classList.add("opacity-50");
             currentLocationButton.classList.add("cursor-not-allowed");
@@ -323,9 +351,24 @@ function getCurrentLocation(isHome) {
         },
             function (error) {
                 handleLocationRequestError(error);
-            })
+            }),
+            options
     }
 
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        var R = 6371; // km
+        var dLat = (lat2 - lat1).toRad();
+        var dLon = (lon2 - lon1).toRad();
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+        return d;
+    }
+    Number.prototype.toRad = function () {
+        return this * Math.PI / 180;
+    }
 
     function handleLocationRequestError(error) {
         if (error.code == 1) {
@@ -363,3 +406,43 @@ scrollTopButton.addEventListener('click', () => window.scrollTo({
     top: 0,
     behavior: 'smooth',
 }));
+
+var openmodal = document.querySelectorAll('.modal-open')
+for (var i = 0; i < openmodal.length; i++) {
+    openmodal[i].addEventListener('click', function (event) {
+        event.preventDefault()
+        toggleModal()
+    })
+}
+
+const overlay = document.querySelector('.modal-overlay')
+overlay.addEventListener('click', toggleModal)
+
+var closemodal = document.querySelectorAll('.modal-close')
+for (var i = 0; i < closemodal.length; i++) {
+    closemodal[i].addEventListener('click', toggleModal)
+}
+
+document.onkeydown = function (evt) {
+    evt = evt || window.event
+    var isEscape = false
+    if ("key" in evt) {
+        isEscape = (evt.key === "Escape" || evt.key === "Esc")
+    } else {
+        isEscape = (evt.keyCode === 27)
+    }
+    if (isEscape && document.body.classList.contains('modal-active')) {
+        toggleModal()
+    }
+};
+
+
+function toggleModal() {
+    const body = document.querySelector('body')
+    const modal = document.querySelector('.modal')
+    const modalContainer = document.querySelector('.modal-container');
+    modal.classList.toggle('opacity-0')
+    modalContainer.classList.toggle('opacity-0')
+    modal.classList.toggle('pointer-events-none')
+    body.classList.toggle('modal-active')
+}

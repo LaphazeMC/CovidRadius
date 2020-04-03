@@ -2,10 +2,39 @@ body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    overflow-x: hidden !important;
+}
+
+.modal {
+    transition: opacity 0.25s ease;
+}
+
+a {
+    border-bottom: 1px steelblue dashed;
+    color: steelblue;
+    cursor: pointer;
+}
+
+ol, ul {
+    list-style: inherit !important;
+}
+
+ul li {
+    padding: 4px;
+    margin-left: 10px;
+}
+
+body .modal-active {
+    overflow-x: hidden;
+    overflow-y: visible !important;
 }
 
 main {
     flex: 1;
+}
+
+.leaflet-top .leaflet-control {
+    margin-top: 30px !important;
 }
 
 #map {
@@ -44,7 +73,7 @@ main {
     margin-right: 5px;
 }
 
-.selectize-control.single .selectize-input:after{
+.selectize-control.single .selectize-input:after {
     display: none !important;
 }
 
@@ -121,18 +150,18 @@ main {
     width: 100% !important;
 }
 
-.self-center{
+.self-center {
     margin: 0 auto;
 }
 
 #scrollTopButton {
-    display: none; 
-    position: fixed; 
-    bottom: 20px; 
-    right: 30px; 
-    z-index: 99; 
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
     border: none;
-    outline: none; 
+    outline: none;
     background-color: #555;
     color: white;
     cursor: pointer;
