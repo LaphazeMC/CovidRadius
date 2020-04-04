@@ -111,7 +111,7 @@
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-4/6 mx-4 sm:mb-2 md:mx-0 lg:mx-0 lg:mb-0 relative">
             <div class="top-0 absolute w-full">
                 <div id="insideRadiusMessage" class="w-full z-50 relative p-1 text-center bg-green-600 text-sm text-white hidden"><i class="ion-checkmark-round"></i> Vous êtes dans le périmètre du confinement</div>
-                <div id="outsideRadiusMessage" class="w-full z-50 relative p-1 bg-red-600 text-white text-sm hidden"><i class="ion-alert-circled"></i> Attention vous n'êtes pas dans le périmètre du confinement</div>
+                <div id="outsideRadiusMessage" class="w-full z-50 relative p-1 text-center bg-red-600 text-white text-sm hidden"><i class="ion-alert-circled"></i> Attention vous n'êtes pas dans le périmètre du confinement</div>
             </div>
             <div class="bottom-0 absolute right-0">
                 <div id="activityTimer" class="w-auto inline-flex h-auto z-50 relative bottom-0 text-center text-white bg-green-600 font-bold border border-gray-200 rounded p-1 leading-tight focus:border-gray-500 self-center hidden">
@@ -159,7 +159,7 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                         Contactez nous par mail
                     </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" value="contact@covidradius.info">
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled id="username" type="text" value="contact@covidradius.info">
                     <div class="flex justify-end pt-2">
                         <button class="modal-close px-2 bg-indigo-500 p-2 rounded-lg text-white hover:bg-indigo-400">Fermer</button>
                     </div>
@@ -184,7 +184,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script type="text/javascript" src="https://ignf.github.io/geoportal-extensions/leaflet-latest/dist/GpPluginLeaflet.js"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
-    <script src="assets/js/main.js?v=40"></script>
+    <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+    <script src="assets/js/main.js?v=41"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>
