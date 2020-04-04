@@ -19,10 +19,10 @@ ol, ul {
     list-style: inherit !important;
 }
 
-ul li {
-    padding: 4px;
-    margin-left: 10px;
-}
+    ul li {
+        padding: 4px;
+        margin-left: 10px;
+    }
 
 body .modal-active {
     overflow-x: hidden;
@@ -173,3 +173,7 @@ main {
     #scrollTopButton:hover {
         background-color: #373737;
     }
+
+a {
+    background-color: inherit !important;
+}

@@ -186,7 +186,9 @@ function displayAlertMapMessage(isActive) {
         else {
             document.getElementById("insideRadiusMessage").classList.add("hidden");
             document.getElementById("outsideRadiusMessage").classList.remove("hidden");
-            window.navigator.vibrate(200);
+            if ("vibrate" in navigator) {
+                window.navigator.vibrate(200);
+            }
         }
     }
     else {
@@ -256,16 +258,18 @@ function startActivityTimer() {
                 clearInterval(activityTimer);
                 document.getElementById("activityTimer").classList.add("hidden");
                 document.getElementById("timerLeftActivity").classList.remove("bg-red-600");
-                window.navigator.vibrate(200);
+                if ("vibrate" in navigator) {
+                    window.navigator.vibrate(200);
+                }
             }
         }, 1000);
     }
     else {
         clearInterval(activityTimer);
         activityTimer = null;
-       /* lastPosition = null;
-        document.getElementById("tripMeterDistance").innerText = "0.000 km";
-        document.getElementById("tripMeter").classList.add("hidden");*/
+        /* lastPosition = null;
+         document.getElementById("tripMeterDistance").innerText = "0.000 km";
+         document.getElementById("tripMeter").classList.add("hidden");*/
         document.getElementById("activityTimer").classList.add("hidden");
         document.getElementById("activityTimerButton").innerHTML = "<span class='ion-play'></span> Démarrer l'activité journalière (1H)";
         document.getElementById("activityTimerButton").classList.add("bg-green-500");
