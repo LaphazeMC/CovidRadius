@@ -26,6 +26,7 @@ function initMap() {
     var mbAttr = 'Map &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, ' + 'Mapbox© <a href="https://www.mapbox.com/"></a>';
     var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
     satellite = L.tileLayer(mbUrl, { id: 'mapbox/satellite-v9', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
+        outdoor = L.tileLayer(mbUrl, { id: 'mapbox/outdoors-v10', tileSize: 512, zoomOffset: -1, attribution: mbAttr }),
         dark = L.tileLayer(mbUrl, { id: 'mapbox/dark-v10', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
     map = L.map('map', {
         center: [defaultLat, defaultLong],
@@ -37,8 +38,9 @@ function initMap() {
 
     var baseLayers = {
         "Satellite": satellite,
-        "Streets": streets,
-        "Night": dark
+        "Rues": streets,
+        "Chemins randonnées": outdoor, 
+        "Nuit": dark
     };
     L.control.layers(baseLayers).addTo(map);
 }
@@ -108,7 +110,7 @@ function parseLatLongFromSelect(formattedValue) {
     return [lat, long];
 }
 
-function updateUserLocationIsInsideHomeRadius() {
+function checkIfInsideHomeRadius() {
     if (homeMarkersLayer._layers != null && watchCurrentUserLocation) {
         var homeLayers = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
         var homePolygonShape = homeLayers._layers[Object.keys(homeLayers._layers)[0]];
@@ -159,7 +161,7 @@ function drawCircleOnMap(latLong, isHome) {
                 polygonCoordinates = result.geometry.coordinates;
                 L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
                 L.circle(latLong, { radius: getRadius(), color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
-                updateUserLocationIsInsideHomeRadius();
+                checkIfInsideHomeRadius();
             },
             onFailure: function (error) {
                 alert(error);
@@ -176,7 +178,7 @@ function drawCircleOnMap(latLong, isHome) {
                 offset: [0, -40]
             }).addTo(currentLocationMarkerLayer);
         map.addLayer(currentLocationMarkerLayer);
-        updateUserLocationIsInsideHomeRadius();
+        checkIfInsideHomeRadius();
     }
 }
 
@@ -441,7 +443,6 @@ document.onkeydown = function (evt) {
         toggleModal()
     }
 };
-
 
 function toggleModal() {
     const body = document.querySelector('body')
