@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link href="assets/css/styles.css?v=40" rel="stylesheet" />
+    <link href="assets/css/styles.css?v=42" rel="stylesheet" />
     <link rel="icon" type="image/png" href="assets/images/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
-    <link rel="stylesheet" type="text/css" href="https://ignf.github.io/geoportal-extensions/leaflet-latest/dist/GpPluginLeaflet.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/GpPluginLeaflet.css">
 
     <title>Carte périmètre confinement COVID-19 FRANCE</title>
     <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre maximal par rapport à votre domicile de la zone de confinement du COVID-19 pour réaliser une activité sportive">
@@ -56,19 +56,23 @@
                         <div class="w:1/7 self-center mt-6 tooltip" style="min-width: 110px;">
                             <div class="flex items-center justify-between">
                                 <span class='tooltip-text bg-black p-3 text-white -mt-10  rounded text-sm z-50'>Position actuelle</span>
-                                <button onclick="getCurrentLocation(true)" style="margin-top: -3px; height: 2.7rem" class="bg-blue-100 hover:bg-blue-200 text-sm text-blue-600 border border-blue-600 font-bold py-1 px-2 rounded focus:outline-none" type="button">
+                                <button onclick="getCurrentLocation(true)" style="margin-top: -3px; height: 2.7rem" class="bg-blue-100 hover:bg-blue-200 text-xs md:text-sm text-blue-600 border border-blue-600 font-bold py-1 px-2 rounded focus:outline-none" type="button">
                                     <span class="ion-ios-location"></span> Ma position
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <button onclick="getCurrentLocation(false)" id="currentLocationButton" class="w-full mt-2 mb-2 bg-blue-500 hover:bg-blue-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
+                    <button onclick="getCurrentLocation(false)" id="currentLocationButton" class="w-full mt-2 mb-2 bg-blue-500 text-sm md:text-base hover:bg-blue-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
                         <span class="ion-ios-location"></span> Voir si je suis dans le périmètre
                     </button>
-                    <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
+                    <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
+                    <button onclick="generateRandomTrip()" id="generateRandomTripButton" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
+                        <span class="ion-flag"></span> Générer un itinéraire aléatoire
+                    </button>
+                    <p class="text-gray-600 text-xs italic"><span class="ion-alert-circled"> Fonctionnalite expérimentale</span></p>
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
@@ -76,7 +80,7 @@
                             </label>
                             <input onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="1" value="1">
                         </div>
-                        <div class="w-full md:w-3/5 px-2 mb-6">
+                        <div class="w-full md:w-3/5 px-2 mb-4">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="unit">
                                 Unité
                             </label>
@@ -90,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-2 mt-2 bg-red-800 self-center mb-2 text-white leading-none rounded-full flex lg:inline-flex" role="alert">
+                        <div class="p-2 bg-red-800 self-center mb-2 text-white leading-none rounded-full flex lg:inline-flex" role="alert">
                             <span style="max-height: 22px;" class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs mr-2">!</span>
                             <span class="mr-2 text-center flex-auto">En france, la distance maximum autorisée est actuellement de 1 kilomètre</span>
                         </div>
@@ -118,10 +122,6 @@
                     <i class="ion-android-alarm-clock"></i>
                     <span id="timerLeftActivity" class="ml-2"></span>
                 </div>
-                <!--<div id="tripMeter" class="w-auto h-auto inline-flex xs:text-sm z-50 relative bottom-0 text-center text-white bg-green-600 font-bold border border-gray-200 rounded p-1 leading-tight focus:border-gray-500 self-center hidden">
-                    <i class="ion-android-walk"></i>
-                    <span id="tripMeterDistance" class="ml-2">0.000 km</span>
-                </div>-->
             </div>
             <div id="map" class="z-10"></div>
         </div>
@@ -144,14 +144,16 @@
                             </svg>
                         </div>
                     </div>
-                    <ul class="list-inside mb-2 list mt-0 ml-2">
+                    <ul class="list-inside mb-2 list mt-0 ml-2" style="max-height: 350px; overflow: auto">
                         <li><a href="http://www.leparisien.fr/info-paris-ile-de-france-oise/transports/coronavirus-l-appli-qui-vous-permet-de-sortir-en-restant-dans-les-clous-05-04-2020-8294385.php" target="_blank">Le Parisien</a></li>
                         <li><a href="https://www.liberation.fr/france/2020/04/01/confinement-jusqu-ou-va-un-kilometre_1783834" target="_blank">Libération</a></li>
                         <li><a href="https://france3-regions.francetvinfo.fr/auvergne-rhone-alpes/isere/grenoble/coronavirus-confinement-application-ne-pas-depasser-kilometre-autorise-developpee-deux-grenoblois-1810634.html" target="_blank">France 3</a></li>
                         <li><a href="https://www.leprogres.fr/edition-lyon-villeurbanne/2020/03/31/avec-covidradius-info-sortez-pile-dans-un-rayon-d-un-kilometre-autour-de-chez-vous" target="_blank">Le progrès</a></li>
                         <li><a href="https://techno.konbini.com/fr/societe/confinement-une-carte-geniale-indique-votre-perimetre-de-deplacement-autorise/" target="_blank">Konbini</a></li>
                         <li><a href="https://www.letelegramme.fr/france/covidradius-une-appli-pour-ne-pas-depasser-le-kilometre-04-04-2020-12535578.php" target="_blank">Le Télégramme</a></li>
+                        <li><a href="https://www.lequipe.fr/Coaching/Running/Actualites/Covidradius-l-application-pour-sortir-en-respectant-les-regles-pendant-le-confinement/1125366" target="_blank">L'équipe</a></li>
                         <li><a href="https://ledauphine.com/actualite/2020/04/03/deux-jeunes-fontainois-lancent-une-application-destinee-aux-confines" target="_blank">Le dauphiné libéré</a></li>
+                        <li><a href="https://rcf.fr/actualite/covid-19-c-est-ou-1-km-de-chez-soi" target="_blank">RCF</a></li>
                         <li><a href="https://www.mindblown.tech/02-04-2020/covidradius-s-equiper-pour-mieux-s-aerer/" target="_blank">Mind Blown Tech</a></li>
                         <li><a href="https://www.francebleu.fr/infos/sante-sciences/coronavirus-et-confinement-deja-40-000-connexions-pour-un-site-internet-iserois-dedie-au-1km-1585933176" target="_blank">France bleu</a></li>
                         <li><a href="https://twitter.com/topito_com/status/1246111616841715712?s=20" target="_blank">Topito</a></li>
@@ -181,12 +183,14 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
-    <script type="text/javascript" src="https://ignf.github.io/geoportal-extensions/leaflet-latest/dist/GpPluginLeaflet.js"></script>
+    <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=41"></script>
+    <script src="assets/js/main.js?v=45"></script>
+    <script src="assets/js/randomTrip.min.js?v=3"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>

@@ -3,6 +3,7 @@ var defaultLong = 4.5;
 var map = null;
 var homeMarkersLayer = L.featureGroup();
 var currentLocationMarkerLayer = L.featureGroup();
+var tripLayer = L.featureGroup();
 var currentUserLocation = [];
 var isCurrentHomeLocationActive = false;
 var isFirstRefreshOfCurrentUserLocation = true;
@@ -10,6 +11,8 @@ var watchCurrentUserLocation = null;
 var isUserInHomePerimeter = false;
 var activityTimer = null;
 var polygonCoordinates = null;
+var homeLocationLatLng = null;
+var numberOfTryForTrip = 0;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -39,7 +42,7 @@ function initMap() {
     var baseLayers = {
         "Satellite": satellite,
         "Rues": streets,
-        "Chemins randonnées": outdoor, 
+        "Chemins randonnées": outdoor,
         "Nuit": dark
     };
     L.control.layers(baseLayers).addTo(map);
@@ -99,6 +102,7 @@ var $select = $('#searchAddresses').selectize({
         if (value) {
             isCurrentHomeLocationActive = false;
             document.getElementById("currentLocationButton").classList.remove("hidden");
+            homeLocationLatLng = parseLatLongFromSelect(value);
             drawCircleOnMap(parseLatLongFromSelect(value), true);
         }
     }
@@ -136,6 +140,7 @@ function unitOrRangeChanged() {
 
 function drawCircleOnMap(latLong, isHome) {
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
+        document.getElementById("generateRandomTripButton").classList.remove("hidden");
         map.setView(latLong, 14);
     }
     if (isHome) {
@@ -272,9 +277,6 @@ function startActivityTimer() {
     else {
         clearInterval(activityTimer);
         activityTimer = null;
-        /* lastPosition = null;
-         document.getElementById("tripMeterDistance").innerText = "0.000 km";
-         document.getElementById("tripMeter").classList.add("hidden");*/
         document.getElementById("activityTimer").classList.add("hidden");
         document.getElementById("activityTimerButton").innerHTML = "<span class='ion-play'></span> Démarrer l'activité journalière (1H)";
         document.getElementById("activityTimerButton").classList.add("bg-green-500");
@@ -296,6 +298,7 @@ function getCurrentLocation(isHome) {
                     isCurrentHomeLocationActive = true;
                     var selectizeControl = $select[0].selectize;
                     selectizeControl.clear()
+                    homeLocationLatLng = currentUserLocation;
                     document.getElementById("searchAddresses-selectized").value = "Position actuelle";
                     document.getElementById("currentLocationButton").classList.remove("hidden");
                     drawCircleOnMap(currentUserLocation, isHome);
@@ -315,35 +318,14 @@ function getCurrentLocation(isHome) {
         }
     }
     else {
-        //lastPosition = null;
         var options = {
             enableHighAccuracy: true, timeout: Infinity, maximumAge: 0,
         };
         watchCurrentUserLocation = navigator.geolocation.watchPosition(function (position) {
-            //if (lastPosition == null) {
-            //    lastPosition = position;
-            //}
             currentUserLocation = [
                 position.coords.latitude,
                 position.coords.longitude
             ];
-            if (activityTimer) {
-                //if (document.getElementById("tripMeter").classList.contains("hidden")) {
-                //    document.getElementById("tripMeter").classList.remove("hidden");
-                //}
-                //if (position.coords.accuracy < 100) {
-                //    var distanceInKms = (parseFloat(document.getElementById("tripMeterDistance").innerText.split(" ")[0]) + calculateDistance(lastPosition.coords.latitude, lastPosition.coords.longitude, position.coords.latitude, position.coords.longitude)).toFixed(3);
-                //    document.getElementById("tripMeterDistance").innerText = (distanceInKms <= 1) ? distanceInKms + " km" : distanceInKms + " kms";
-                //    lastPosition = position;
-                //}
-            }
-            else {
-                /*if (!document.getElementById("tripMeter").classList.contains("hidden")) {
-                    lastPosition = null;
-                    document.getElementById("tripMeterDistance").innerText = "0.000 km";
-                    document.getElementById("tripMeter").classList.add("hidden");
-                }*/
-            }
             var currentLocationButton = document.getElementById("currentLocationButton");
             currentLocationButton.classList.add("opacity-50");
             currentLocationButton.classList.add("cursor-not-allowed");
@@ -361,21 +343,6 @@ function getCurrentLocation(isHome) {
                 handleLocationRequestError(error);
             }),
             options
-    }
-
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        var R = 6371; // km
-        var dLat = (lat2 - lat1).toRad();
-        var dLon = (lon2 - lon1).toRad();
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d;
-    }
-    Number.prototype.toRad = function () {
-        return this * Math.PI / 180;
     }
 
     function handleLocationRequestError(error) {

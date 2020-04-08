@@ -33,6 +33,10 @@ main {
     flex: 1;
 }
 
+.list-inside{
+    list-style-position: inside !important;
+}
+
 .leaflet-top .leaflet-control {
     margin-top: 30px !important;
 }
