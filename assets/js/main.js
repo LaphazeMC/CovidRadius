@@ -234,8 +234,8 @@ function startActivityTimer() {
         document.getElementById("activityTimerButton").innerHTML = "<span class='ion-pause'></span> Arrêter l'activité journalière";
         document.getElementById("activityTimerButton").classList.remove("bg-green-500");
         document.getElementById("activityTimerButton").classList.remove("hover:bg-green-700");
-        document.getElementById("activityTimerButton").classList.add("bg-orange-600");
-        document.getElementById("activityTimerButton").classList.add("hover:bg-orange-700");
+        document.getElementById("activityTimerButton").classList.add("bg-red-600");
+        document.getElementById("activityTimerButton").classList.add("hover:bg-red-700");
         document.getElementById("timerLeftActivity").innerText = "1h:00:00";
         document.getElementById("activityTimer").classList.add("bg-green-600");
         activityTimer = setInterval(function () {
@@ -281,8 +281,8 @@ function startActivityTimer() {
         document.getElementById("activityTimerButton").innerHTML = "<span class='ion-play'></span> Démarrer l'activité journalière (1H)";
         document.getElementById("activityTimerButton").classList.add("bg-green-500");
         document.getElementById("activityTimerButton").classList.add("hover:bg-green-700");
-        document.getElementById("activityTimerButton").classList.remove("bg-orange-600");
-        document.getElementById("activityTimerButton").classList.remove("hover:bg-orange-700");
+        document.getElementById("activityTimerButton").classList.remove("bg-red-600");
+        document.getElementById("activityTimerButton").classList.remove("hover:bg-red-700");
     }
 }
 
@@ -329,6 +329,7 @@ function getCurrentLocation(isHome) {
             var currentLocationButton = document.getElementById("currentLocationButton");
             currentLocationButton.classList.add("opacity-50");
             currentLocationButton.classList.add("cursor-not-allowed");
+            currentLocationButton.setAttribute("disabled", "true");
             currentLocationButton.innerHTML = "<span class='ion-android-checkmark-circle'> Localisation en temps réel établie</span>";
             drawCircleOnMap(currentUserLocation, isHome);
             document.getElementById("activityTimerButton").classList.remove("hidden");

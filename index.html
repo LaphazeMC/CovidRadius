@@ -65,10 +65,10 @@
                     <button onclick="getCurrentLocation(false)" id="currentLocationButton" class="w-full mt-2 mb-2 bg-blue-500 text-sm md:text-base hover:bg-blue-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
                         <span class="ion-ios-location"></span> Voir si je suis dans le périmètre
                     </button>
+                    <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
                     <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
-                    <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
                     <button onclick="generateRandomTrip()" id="generateRandomTripButton" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-flag"></span> Générer un itinéraire aléatoire
                     </button>
@@ -118,6 +118,10 @@
                 <div id="outsideRadiusMessage" class="w-full z-50 relative p-1 text-center bg-red-600 text-white text-sm hidden"><i class="ion-alert-circled"></i> Attention vous n'êtes pas dans le périmètre du confinement</div>
             </div>
             <div class="bottom-0 absolute right-0">
+                <div id="tripDistance" class="w-auto inline-flex h-auto z-50 relative bottom-0 text-center text-white bg-orange-600 font-bold border border-gray-200 rounded p-1 leading-tight focus:border-gray-500 self-center hidden">
+                    <i class="ion-android-walk"></i>
+                    <span id="tripDistanceText" class="ml-2">2.4km</span>
+                </div>
                 <div id="activityTimer" class="w-auto inline-flex h-auto z-50 relative bottom-0 text-center text-white bg-green-600 font-bold border border-gray-200 rounded p-1 leading-tight focus:border-gray-500 self-center hidden">
                     <i class="ion-android-alarm-clock"></i>
                     <span id="timerLeftActivity" class="ml-2"></span>
@@ -189,8 +193,8 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=45"></script>
-    <script src="assets/js/randomTrip.min.js?v=3"></script>
+    <script src="assets/js/main.js?v=46"></script>
+    <script src="assets/js/randomTrip.min.js?v=4"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>
