@@ -69,10 +69,12 @@
                     <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
-                    <button onclick="generateRandomTrip()" id="generateRandomTripButton" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
-                        <span class="ion-flag"></span> Générer un itinéraire aléatoire
-                    </button>
-                    <p class="text-gray-600 text-xs italic"><span class="ion-alert-circled"> Fonctionnalite expérimentale</span></p>
+                    <div id="generateRandomTripButton" class="hidden">
+                        <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none" type="button">
+                            <span class="ion-flag"></span> Générer un itinéraire aléatoire
+                        </button>
+                        <p class="text-gray-600 text-xs italic"><span class="ion-alert-circled"> Fonctionnalite expérimentale</span></p>
+                    </div>
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
@@ -155,6 +157,7 @@
                         <li><a href="https://www.leprogres.fr/edition-lyon-villeurbanne/2020/03/31/avec-covidradius-info-sortez-pile-dans-un-rayon-d-un-kilometre-autour-de-chez-vous" target="_blank">Le progrès</a></li>
                         <li><a href="https://techno.konbini.com/fr/societe/confinement-une-carte-geniale-indique-votre-perimetre-de-deplacement-autorise/" target="_blank">Konbini</a></li>
                         <li><a href="https://www.letelegramme.fr/france/covidradius-une-appli-pour-ne-pas-depasser-le-kilometre-04-04-2020-12535578.php" target="_blank">Le Télégramme</a></li>
+                        <li><a href="https://www.20minutes.fr/societe/2758011-20200409-coronavirus-site-internet-sortir-tout-restant-perimetre-autorise" target="_blank">20 minutes</a></li>
                         <li><a href="https://www.lequipe.fr/Coaching/Running/Actualites/Covidradius-l-application-pour-sortir-en-respectant-les-regles-pendant-le-confinement/1125366" target="_blank">L'équipe</a></li>
                         <li><a href="https://ledauphine.com/actualite/2020/04/03/deux-jeunes-fontainois-lancent-une-application-destinee-aux-confines" target="_blank">Le dauphiné libéré</a></li>
                         <li><a href="https://rcf.fr/actualite/covid-19-c-est-ou-1-km-de-chez-soi" target="_blank">RCF</a></li>
@@ -170,7 +173,6 @@
                     <div class="flex justify-end pt-2">
                         <button class="modal-close px-2 bg-indigo-500 p-2 rounded-lg text-white hover:bg-indigo-400">Fermer</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -181,7 +183,9 @@
             Contact
             <span style="margin-left: -100px" class='tooltip-text bg-black p-3 text-white -mt-8 rounded text-sm z-50'>contact@covidradius.info</span>
         </a> -
-        <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source</a>
+        <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source</a> -
+        <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/ios.mp4">Aide IOS</a> -
+        <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/android.mp4">Aide Android</a>
     </footer>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -193,8 +197,8 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=46"></script>
-    <script src="assets/js/randomTrip.min.js?v=4"></script>
+    <script src="assets/js/main.js?v=48"></script>
+    <script src="assets/js/randomTrip.min.js?v=5"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>

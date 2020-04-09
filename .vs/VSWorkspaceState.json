@@ -3,9 +3,11 @@
     "",
     "\\assets",
     "\\assets\\css",
+    "\\assets\\css\\images",
     "\\assets\\images",
-    "\\assets\\js"
+    "\\assets\\js",
+    "\\node_modules"
   ],
-  "SelectedNode": "\\assets\\js\\main.js",
+  "SelectedNode": "\\index.html",
   "PreviewInSolutionExplorer": false
 }

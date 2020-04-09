@@ -46,7 +46,22 @@ function initMap() {
         "Nuit": dark
     };
     L.control.layers(baseLayers).addTo(map);
+    try {
+        var storedHomeAddressLocalLatLng = localStorage.getItem('currentHomeAddressLatLng');
+        var storedHomeAddressLocalAddress = localStorage.getItem('currentHomeAddress');
+        if (storedHomeAddressLocalLatLng != null && storedHomeAddressLocalAddress != null) {
+            currentUserLocation = storedHomeAddressLocalLatLng.split(",").map(Number);
+            homeLocationLatLng = currentUserLocation;
+            isCurrentHomeLocationActive = true;
+            drawCircleOnMap(currentUserLocation, true);
+            document.getElementById("searchAddresses-selectized").value = storedHomeAddressLocalAddress;
+
+        }
+    } catch (e) {
+        console.log("can't get in local storage" + e);
+    }
 }
+
 window.onload = function () {
     initMap();
 };
@@ -101,8 +116,13 @@ var $select = $('#searchAddresses').selectize({
     onChange: function (value, isOnInitialize) {
         if (value) {
             isCurrentHomeLocationActive = false;
-            document.getElementById("currentLocationButton").classList.remove("hidden");
             homeLocationLatLng = parseLatLongFromSelect(value);
+            try {
+                localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
+                localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
+            } catch (e) {
+                console.log("can't set in local storage" + e);
+            }
             drawCircleOnMap(parseLatLongFromSelect(value), true);
         }
     }
@@ -139,6 +159,7 @@ function unitOrRangeChanged() {
 }
 
 function drawCircleOnMap(latLong, isHome) {
+    document.getElementById("currentLocationButton").classList.remove("hidden");
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
         document.getElementById("generateRandomTripButton").classList.remove("hidden");
         map.setView(latLong, 14);
