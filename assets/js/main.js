@@ -13,6 +13,9 @@ var activityTimer = null;
 var polygonCoordinates = null;
 var homeLocationLatLng = null;
 var numberOfTryForTrip = 0;
+var alertSound = new Audio("assets/images/alertSound.mp4");
+var allAudio = [];
+var alertSoundInterval = null;
 
 L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
@@ -25,6 +28,7 @@ var userMarker = L.AwesomeMarkers.icon({
 });
 
 function initMap() {
+    allAudio.push(alertSound);
     var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
     var mbAttr = 'Map &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, ' + 'Mapbox© <a href="https://www.mapbox.com/"></a>GpPlugin © <a href="https://geoservices.ign.fr/index.html" target="_blank">IGN</a>';
     var streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mbAttr });
@@ -213,12 +217,30 @@ function displayAlertMapMessage(isActive) {
         if (isUserInHomePerimeter) {
             document.getElementById("insideRadiusMessage").classList.remove("hidden");
             document.getElementById("outsideRadiusMessage").classList.add("hidden");
+            if (alertSoundInterval) {
+                clearInterval(alertSoundInterval);
+                alertSoundInterval = null;
+            }
         }
         else {
             document.getElementById("insideRadiusMessage").classList.add("hidden");
             document.getElementById("outsideRadiusMessage").classList.remove("hidden");
-            if ("vibrate" in navigator) {
-                window.navigator.vibrate(200);
+            if (document.getElementById("isVibrateAlert").checked) {
+                if ("vibrate" in navigator) {
+                    window.navigator.vibrate(200);
+                }
+            }
+            if (document.getElementById("isAudioAlert").checked) {
+                if (!alertSoundInterval) {
+                    setTimeout(function () { alertSound.play() }, 2000);
+                    alertSoundInterval = setInterval(function () { setTimeout(function () { alertSound.play() }, 2000); }, 8000);
+                }
+            }
+            else {
+                if (alertSoundInterval) {
+                    clearInterval(alertSoundInterval);
+                    alertSoundInterval = null;
+                }
             }
         }
     }
@@ -289,8 +311,10 @@ function startActivityTimer() {
                 clearInterval(activityTimer);
                 document.getElementById("activityTimer").classList.add("hidden");
                 document.getElementById("timerLeftActivity").classList.remove("bg-red-600");
-                if ("vibrate" in navigator) {
-                    window.navigator.vibrate(200);
+                if (document.getElementById("isVibrateAlert").checked) {
+                    if ("vibrate" in navigator) {
+                        window.navigator.vibrate(200);
+                    }
                 }
             }
         }, 1000);
@@ -352,6 +376,7 @@ function getCurrentLocation(isHome) {
             currentLocationButton.classList.add("cursor-not-allowed");
             currentLocationButton.setAttribute("disabled", "true");
             currentLocationButton.innerHTML = "<span class='ion-android-checkmark-circle'> Localisation en temps réel établie</span>";
+            document.getElementById("alertsBlock").classList.remove("hidden");
             drawCircleOnMap(currentUserLocation, isHome);
             document.getElementById("activityTimerButton").classList.remove("hidden");
             if (isFirstRefreshOfCurrentUserLocation) {
@@ -432,6 +457,23 @@ document.onkeydown = function (evt) {
         toggleModal()
     }
 };
+
+var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+if (iOS) {
+    function tapped() {
+        if (allAudio) {
+            for (var audio of allAudio) {
+                audio.play();
+                audio.pause();
+                audio.currentTime = 0;
+            }
+            allAudio = null;
+        }
+    }
+
+    document.body.addEventListener("touchstart", tapped, false);
+    document.body.addEventListener("click", tapped, false);
+}
 
 function toggleModal() {
     const body = document.querySelector('body')

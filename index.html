@@ -65,6 +65,23 @@
                     <button onclick="getCurrentLocation(false)" id="currentLocationButton" class="w-full mt-2 mb-2 bg-blue-500 text-sm md:text-base hover:bg-blue-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline hidden" type="button">
                         <span class="ion-ios-location"></span> Voir si je suis dans le périmètre
                     </button>
+                    <div id="alertsBlock" class="hidden">
+                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 inline-block mr-2">
+                            Alertes dépassement
+                        </label>
+                        <label class="block text-gray-700 font-bold inline-block mr-2">
+                            <input class="mr-1 leading-tight relative" type="checkbox" style="top: 2px" checked id="isVibrateAlert">
+                            <span class="text-sm">
+                                📳 Vibration
+                            </span>
+                        </label>
+                        <label class="block text-gray-700 font-bold inline-block">
+                            <input class="mr-1 leading-tight relative" type="checkbox" style="top: 2px" checked id="isAudioAlert">
+                            <span class="text-sm">
+                                🔊 Audio
+                            </span>
+                        </label>
+                    </div>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
                     <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
@@ -197,8 +214,8 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=48"></script>
-    <script src="assets/js/randomTrip.min.js?v=5"></script>
+    <script src="assets/js/main.js?v=75"></script>
+    <script src="assets/js/randomTrip.min.js?v=6"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>
