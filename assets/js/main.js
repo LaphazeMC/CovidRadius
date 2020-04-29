@@ -155,7 +155,9 @@ function checkIfInsideHomeRadius() {
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
         var selectizeControl = $select[0].selectize;
-        drawCircleOnMap(parseLatLongFromSelect(selectizeControl.getValue()), true);
+        if (selectizeControl.getValue() != "") {
+            drawCircleOnMap(parseLatLongFromSelect(selectizeControl.getValue()), true);
+        }
     }
     else {
         drawCircleOnMap(currentUserLocation, true);
@@ -170,33 +172,40 @@ function drawCircleOnMap(latLong, isHome) {
     }
     if (isHome) {
         homeMarkersLayer.clearLayers();
-        L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
-            {
-                permanent: true,
-                direction: 'top',
-                offset: [0, -40]
-            }).addTo(homeMarkersLayer);
-        Gp.Services.isoCurve({
-            position: {
-                x: latLong[1],
-                y: latLong[0]
-            },
-            color: "green",
-            distance: getRadius(),
-            graph: "Pieton",
-            reverse: false,
-            smoothing: true,
-            apiKey: "choisirgeoportail",
-            onSuccess: function (result) {
-                polygonCoordinates = result.geometry.coordinates;
-                L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
-                L.circle(latLong, { radius: getRadius(), color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
-                checkIfInsideHomeRadius();
-            },
-            onFailure: function (error) {
-                alert(error);
-            }
-        });
+        var currentRadiusInMeters = getRadius();
+        if (currentRadiusInMeters < 10000) {
+            L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
+                {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -40]
+                }).addTo(homeMarkersLayer);
+            Gp.Services.isoCurve({
+                position: {
+                    x: latLong[1],
+                    y: latLong[0]
+                },
+                color: "green",
+                distance: currentRadiusInMeters,
+                graph: "Pieton",
+                reverse: false,
+                smoothing: true,
+                apiKey: "choisirgeoportail",
+                onSuccess: function (result) {
+                    polygonCoordinates = result.geometry.coordinates;
+                    L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
+                    L.circle(latLong, { radius: currentRadiusInMeters, color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
+                    checkIfInsideHomeRadius();
+                },
+                onFailure: function (error) {
+                    alert(error);
+                }
+            });
+        }
+        else { // only draw circle if more than 10kms
+            L.circle(latLong, { radius: currentRadiusInMeters, color: "green", dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
+            map.setView(latLong, 8);
+        }
         map.addLayer(homeMarkersLayer);
     }
     else { // current user location 
@@ -253,7 +262,7 @@ function displayAlertMapMessage(isActive) {
 function getRadius() {
     var isKm = (document.getElementById("unit").value == "km") ? true : false;
     var range = document.getElementById("range").value;
-    if (((range < 0 || range > 20) && isKm) || (range < 0 && range > 200000) && !isKm) {
+    if (((range < 0 || range > 100) && isKm) || (range < 0 && range > 1000000) && !isKm) {
         document.getElementById("range").value = 1;
         range = 1;
     }
