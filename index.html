@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link href="assets/css/styles.css?v=42" rel="stylesheet" />
+    <link href="assets/css/styles.css?v=45" rel="stylesheet" />
     <link rel="icon" type="image/png" href="assets/images/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
@@ -12,9 +12,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/GpPluginLeaflet.css">
-
     <title>Carte périmètre confinement COVID-19 FRANCE</title>
-    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre maximal depuis votre domicile de la zone de confinement du COVID-19 pour réaliser une activité sportive">
+    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre 100km depuis votre domicile de la zone de confinement du COVID-19 pour réaliser une activité sportive">
     <meta name="Copyright" content="SOLUCIDIA">
     <meta name="Author" content="Maxime Girard">
     <meta name="Identifier-Url" content="https://covidradius.info/">
@@ -23,8 +22,9 @@
     <meta name="Distribution" content="global">
     <meta property="og:title" content="Carte périmètre confinement COVID-19 FRANCE">
     <meta property="og:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
-    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre maximal depuis votre domicile de la zone de confinement du COVID-19 pour réaliser une activité sportive">
+    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 10km depuis votre domicile de la zone de confinement du COVID-19 pour réaliser une activité sportive">
     <meta property="og:url" content="https://covidradius.info/">
+    <script data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
@@ -38,9 +38,9 @@
                     <div class="font-bold text-xl mb-2">Bordure limite des activités sportives 🇫🇷</div>
                     <p class="text-gray-700 text-base">
                         Cette carte interactive française permet de vous informer de votre périmètre maximum pour faire vos activités sportives autour de votre domicile.
-                    <p class="text-sm text-blue-700">
-                        <span class="ion-information-circled"></span> Le périmètre recommandé est calculé via isodistances, le vol d'oiseau est affiché à titre indicatif.
-                    </p>
+                        <!--<p class="text-sm text-blue-700">
+                            <span class="ion-information-circled"></span> Le périmètre recommandé est calculé via isodistances, le vol d'oiseau est affiché à titre indicatif.
+                        </p>-->
                     </p>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <form class="bg-white shadow-md rounded px-8 pl-6 pt-0 pb-2">
                     <div class="p-2 bg-gray-200 border border-gray-200 self-center mb-2 text-gray-800 rounded-full" role="alert">
                         <p class="text-center font-bold">CovidRadius sera mis à jour pour répondre aux nouvelles normes du gouvernement le 11 Mai</p>
-                        <hr class="m-1"/>
+                        <hr class="m-1" />
                         <p class="text-center text-sm">En attendant, vous pouvez dejà changer la distance de 1 kilomètre à 100 pour vous donner une idée du futur périmètre</p>
                     </div>
                     <div class="flex">
@@ -91,12 +91,20 @@
                     <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
-                    <div id="generateRandomTripButton" class="hidden">
-                        <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none" type="button">
-                            <span class="ion-flag"></span> Générer un itinéraire aléatoire
-                        </button>
-                        <p class="text-gray-600 text-xs italic"><span class="ion-alert-circled"> Fonctionnalite expérimentale</span></p>
-                    </div>
+                    <!--<div id="generateRandomTripButton" class="hidden flex">
+                        <div class="w-4/6">
+                            <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none" type="button">
+                                <span class="ion-flag"></span> Générer un itinéraire aléatoire
+                            </button>
+                        </div>
+                        <div class="w-2/6" style="margin-top: -15px; margin-left: 5px">
+                            <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="distanceTrip">
+                                ~ km du parcours
+                            </label>
+                            <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="3" value="3">
+                        </div>
+                    </div>-->
+                    <p class="text-gray-600 text-xs italic"><span class="ion-alert-circled"> Fonctionnalite expérimentale</span></p>
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
@@ -118,6 +126,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="min-width:400px; width: 100%; min-height:130px; margin: 0 auto; margin-bottom: 10px">
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-client="ca-pub-6921403650950030"
+                                 data-ad-slot="2362142837"
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
                         <div class="p-2 bg-red-800 self-center mb-2 text-white leading-none rounded-full flex lg:inline-flex" role="alert">
                             <span style="max-height: 22px;" class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs mr-2">!</span>
                             <span class="mr-2 text-center flex-auto">En france, la distance maximum autorisée est actuellement de 1 kilomètre</span>
@@ -125,13 +145,31 @@
                         <p class="text-gray-600 text-xs italic">Déplacements brefs, dans la limite d'une heure quotidienne, liés soit à l'activité physique individuelle des personnes, à l'exclusion de toute pratique sportive collective et de toute proximité avec d'autres personnes, soit à la promenade avec les seules personnes regroupées dans un même domicile, soit aux besoins des animaux de compagnie.</p>
                     </div>
                 </form>
-                <div class="px-2 bg-gray-200 mb-3">
+                <div class="px-2 bg-gray-200">
                     <a href="https://instagram.com/covidradius" target="_blank" class="text-white font-bold rounded focus:outline-none hover:bg-gray-100 p-2 pl-0" style="border: 0" type="button">
                         <img src="assets/images/instagram.png" class="w-8 inline-block" />
                         <span class="ml-2 inline-block text-gray-700 text-sm">Suivez-nous</span>
                     </a>
                     <button class="modal-open h-10 text-white font-bold py-3 px-3 rounded focus:outline-none text-blue-600 float-right pr-0" type="button">
                         <span class="ion-document-text text-sm"> Ils parlent de nous</span>
+                    </button>
+                </div>
+                <div class="p-2 text-center">
+                    <p class="lg:inline-block pr-2 font-bold text-gray-700 text-sm sm:block">Partagez sur vos réseaux</p>
+                    <button class="text-white font-bold py-2 px-4 rounded inline-flex items-center" style="background-color: #3d69af; width: 42px; font-size: 1.1rem" onclick="shareSocial('facebook')">
+                        <span class="ion-social-facebook"></span>
+                    </button>
+                    <button class="text-white font-bold py-2 px-4 rounded inline-flex items-center" style="background-color: #00afee; font-size: 1.1rem" onclick="shareSocial('twitter')">
+                        <span class="ion-social-twitter"></span>
+                    </button>
+                    <button class="text-white font-bold py-2 px-4 rounded inline-flex items-center" style="background-color: #25d367; font-size: 1.1rem" onclick="shareSocial('whatsapp')">
+                        <span class="ion-social-whatsapp"></span>
+                    </button>
+                    <button class="text-white font-bold py-2 px-4 rounded inline-flex items-center" style="background-color: #246279; font-size: 1.1rem" onclick="shareSocial('linkedin')">
+                        <span class="ion-social-linkedin"></span>
+                    </button>
+                    <button class="bg-pink-400 text-white font-bold py-2 px-4 rounded inline-flex items-center" style="font-size: 1.1rem" onclick="shareSocial('mail')">
+                        <span class="ion-email"></span>
                     </button>
                 </div>
             </div>
@@ -206,6 +244,7 @@
             <span style="margin-left: -100px" class='tooltip-text bg-black p-3 text-white -mt-8 rounded text-sm z-50'>contact@covidradius.info</span>
         </a> -
         <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source</a> -
+        <a class="text-blue-600" target="_blank" href="https://media.interieur.gouv.fr/deplacement-covid-19/">Attestation de sortie numérique</a> -
         <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/ios.mp4">Aide IOS</a> -
         <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/android.mp4">Aide Android</a>
     </footer>
@@ -219,8 +258,8 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=76"></script>
-    <script src="assets/js/randomTrip.min.js?v=7"></script>
+    <script src="assets/js/main.js?v=86"></script>
+    <script src="assets/js/randomTrip.js?v=9"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
     <script>

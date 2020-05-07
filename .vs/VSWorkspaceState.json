@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\assets\\css",
-    "\\assets\\css\\images",
+    "\\assets",
     "\\assets\\images",
     "\\assets\\js",
-    "\\Local settings (.vs)",
     "\\node_modules"
   ],
+  "SelectedNode": "\\assets\\js\\main.js",
   "PreviewInSolutionExplorer": false
 }

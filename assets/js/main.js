@@ -2,6 +2,7 @@ var defaultLat = 46.5;
 var defaultLong = 4.5;
 var map = null;
 var homeMarkersLayer = L.featureGroup();
+var departmentsLayer = L.featureGroup();
 var currentLocationMarkerLayer = L.featureGroup();
 var tripLayer = L.featureGroup();
 var currentUserLocation = [];
@@ -27,6 +28,46 @@ var userMarker = L.AwesomeMarkers.icon({
     markerColor: 'red'
 });
 
+function styleDepartment(feature) {
+    return {
+        color: (feature.properties.color !== undefined) ? feature.properties.color : "red",
+        fillOpacity: 0,
+        weight: 1.5,
+        dashArray: '5, 5', dashOffset: '10'
+    };
+}
+
+function onEachFeature(feature, layer) {
+    if (feature.properties) {
+        layer.on('mouseover', function () { layer.openPopup(); });
+        layer.on('mouseout', function () { layer.closePopup(); });
+        layer.bindPopup(feature.properties.nom);
+    }
+}
+
+function shareSocial(socialNetworkName) {
+    var newWindowUrl = "";
+    switch (socialNetworkName) {
+        case "facebook":
+            newWindowUrl = "https://www.facebook.com/sharer/sharer.php?u=https://covidradius.info&quote=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alertés si vous dépassez ce périmètre";
+            break;
+        case "twitter":
+            newWindowUrl = "https://twitter.com/intent/tweet?url=https://covidradius.info&hashtags=covidradius,covid19,confinement&text=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alertés si vous dépassez ce périmètre";
+            break;
+        case "linkedin":
+            newWindowUrl = "https://www.linkedin.com/sharing/share-offsite/?url=https://covidradius.info";
+            break;
+        case "whatsapp":
+            newWindowUrl = "whatsapp://send?text=https://covidradius.info";
+            break;
+        case "mail":
+            newWindowUrl = "mailto:?subject=Carte interactive française permettant d'être informé du périmètre 100km depuis votre domicile de la zone de confinement du COVID-19;body=Bonjour, %0D%0A Découvrez ce site qui permet de connaître le périmètre de 100km autorisé par rapport au confinement ! %0D%0A Voici le lien https://covidradius.info";
+            break;
+        default:
+    }
+    window.open(newWindowUrl);
+}
+
 function initMap() {
     allAudio.push(alertSound);
     var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
@@ -42,6 +83,11 @@ function initMap() {
         layers: [streets]
     });
     L.control.scale({ imperial: false }).addTo(map);
+
+    var geojsonLayer = $.getJSON("https://covidradius.info/devTest/assets/departments.json", function (json) {
+        L.geoJson(json.features, { style: styleDepartment/*, onEachFeature: onEachFeature*/ }).addTo(departmentsLayer);
+        map.addLayer(departmentsLayer);
+    });
 
     var baseLayers = {
         "Satellite": satellite,
@@ -138,14 +184,20 @@ function parseLatLongFromSelect(formattedValue) {
     return [lat, long];
 }
 
+
 function checkIfInsideHomeRadius() {
     if (homeMarkersLayer._layers != null && watchCurrentUserLocation) {
-        var homeLayers = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
+        var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
+        var radius = homeCircle.getRadius(); //get home circle radius in metter
+        var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
+        isUserInHomePerimeter = Math.abs(circleCenterPoint.distanceTo(currentUserLocation)) <= radius;
+        displayAlertMapMessage(true);
+        /*var homeLayers = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
         var homePolygonShape = homeLayers._layers[Object.keys(homeLayers._layers)[0]];
         var pt = turf.point([currentUserLocation[1], currentUserLocation[0]]);
         var poly = turf.polygon(polygonCoordinates);
         isUserInHomePerimeter = turf.booleanPointInPolygon(pt, poly);
-        displayAlertMapMessage(true);
+        displayAlertMapMessage(true);*/
     }
     else {
         displayAlertMapMessage(false);
@@ -167,19 +219,20 @@ function unitOrRangeChanged() {
 function drawCircleOnMap(latLong, isHome) {
     document.getElementById("currentLocationButton").classList.remove("hidden");
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
-        document.getElementById("generateRandomTripButton").classList.remove("hidden");
-        map.setView(latLong, 14);
+        //document.getElementById("generateRandomTripButton").classList.remove("hidden");
     }
     if (isHome) {
         homeMarkersLayer.clearLayers();
         var currentRadiusInMeters = getRadius();
-        if (currentRadiusInMeters < 10000) {
-            L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
-                {
-                    permanent: true,
-                    direction: 'top',
-                    offset: [0, -40]
-                }).addTo(homeMarkersLayer);
+        L.marker(latLong, { icon: homeMarker }).bindTooltip("Domicile",
+            {
+                permanent: true,
+                direction: 'top',
+                offset: [0, -40]
+            }).addTo(homeMarkersLayer);
+        if (currentRadiusInMeters > 8000) {
+            map.setView(latLong, 8);
+            /*L.circle(latLong, { radius: currentRadiusInMeters, color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
             Gp.Services.isoCurve({
                 position: {
                     x: latLong[1],
@@ -194,19 +247,18 @@ function drawCircleOnMap(latLong, isHome) {
                 onSuccess: function (result) {
                     polygonCoordinates = result.geometry.coordinates;
                     L.geoJson(result.geometry, { style: { color: 'green' } }).addTo(homeMarkersLayer);
-                    L.circle(latLong, { radius: currentRadiusInMeters, color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
-                    checkIfInsideHomeRadius();
                 },
                 onFailure: function (error) {
                     alert(error);
                 }
-            });
+            });*/
         }
-        else { // only draw circle if more than 10kms
-            L.circle(latLong, { radius: currentRadiusInMeters, color: "green", dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
-            map.setView(latLong, 8);
+        else {
+            map.setView(latLong, 14);
         }
+        L.circle(latLong, { radius: currentRadiusInMeters, color: "green", dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
         map.addLayer(homeMarkersLayer);
+        checkIfInsideHomeRadius();
     }
     else { // current user location 
         currentLocationMarkerLayer.clearLayers();
