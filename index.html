@@ -32,15 +32,12 @@
         <div class="w-full sm:w-1/1 md:w-1/2 lg:w-2/6">
             <div class="w-full overflow-hidden shadow-lg">
                 <div class="w-full border border-black-gray p-2 text-center">
-                    <img class="self-center xs:full-w" src="assets/images/baneer.png" alt="COVID-19 Baneer">
+                    <img class="self-center xs:full-w" src="assets/images/baneer.png" alt="COVID-19 Baneer" id="logo">
                 </div>
                 <div class="px-6 py-4">
                     <div class="font-bold text-xl mb-2">Bordure limite des activités sportives 🇫🇷</div>
                     <p class="text-gray-700 text-base">
                         Cette carte interactive française permet de vous informer de votre périmètre maximum pour faire vos activités sportives autour de votre domicile.
-                        <!--<p class="text-sm text-blue-700">
-                            <span class="ion-information-circled"></span> Le périmètre recommandé est calculé via isodistances, le vol d'oiseau est affiché à titre indicatif.
-                        </p>-->
                     </p>
                 </div>
             </div>
@@ -238,7 +235,7 @@
         </div>
     </main>
     <footer class="w-full bg-gray-800 p-2 text-white text-center text-xs mt-4 lg:mt-0">
-        Développé avec ❤️ par Maxime Girard sur une 💡 de Loïc Bouvet - Aucune donnée n'est stockée ni récupérée -
+        <span id="copyright">Développé avec ❤️ par Maxime Girard sur une 💡 de Loïc Bouvet</span> - Aucune donnée n'est stockée ni récupérée -
         <a class="text-blue-600 tooltip" href="mailto:contact@covidradius.info">
             Contact
             <span style="margin-left: -100px" class='tooltip-text bg-black p-3 text-white -mt-8 rounded text-sm z-50'>contact@covidradius.info</span>
@@ -258,7 +255,7 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=86"></script>
+    <script src="assets/js/main.js?v=87"></script>
     <script src="assets/js/randomTrip.js?v=9"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
