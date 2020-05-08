@@ -1,18 +1,18 @@
-# Features : 
+
+## Features : 
 - Display authorized perimeter radius (isodistance) for a specific distance (1 to 100 kilometers)
 - Real-time user's geolocation and alerts (vibration/audio) if he go out of authorized perimeter.
 - Random trip generation inside perimeter (distance of trip can be configured)
 
-# Stack : 
+## Stack : 
 
 OpenStreetMap/Leaflet/TailwindCSS
 
-# Build : 
-
-There is nothing to do, only copy/paste to your Web server and it will work like a charm
+## Build : 
+There is nothing to do, only copy/paste to your Web server and it will work like a charm.
 Note : Please change API key if possible
 
-# Distribution :
+## Distribution :
 
 If you want to use this app, please respect the APACHE LICENCE 2.0 that can be summarized like this :
 - You must have the CovidRadius logo with a link to the initial covidradius app (https://covidradius.info)
