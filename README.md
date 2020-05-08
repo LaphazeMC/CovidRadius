@@ -8,3 +8,12 @@
 # Stack : 
 
 OpenStreetMap/Leaflet/TailwindCSS/
+
+# Distribution :
+
+If you want to use this app, please respect the APACHE LICENCE 2.0 that can summarized like this :
+- You must have the CovidRadius logo with a link to the initial covidradius app (https://covidradius.info)
+- You must leave credits in the footer
+- You must leave the link to this github
+- You can make money (using adversting or whatever you prefer) using this source code
+- You can modify source code and adapt to fit your needs
