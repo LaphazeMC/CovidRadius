@@ -48,10 +48,10 @@ function shareSocial(socialNetworkName) {
     var newWindowUrl = "";
     switch (socialNetworkName) {
         case "facebook":
-            newWindowUrl = "https://www.facebook.com/sharer/sharer.php?u=https://covidradius.info&quote=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alertés si vous dépassez ce périmètre";
+            newWindowUrl = "https://www.facebook.com/sharer/sharer.php?u=https://covidradius.info&quote=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alerté si vous dépassez ce périmètre";
             break;
         case "twitter":
-            newWindowUrl = "https://twitter.com/intent/tweet?url=https://covidradius.info&hashtags=covidradius,covid19,confinement&text=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alertés si vous dépassez ce périmètre";
+            newWindowUrl = "https://twitter.com/intent/tweet?url=https://covidradius.info&hashtags=covidradius,covid19,confinement&text=Découvrez votre périmètre de confinement facilement ! Bonus : Vous pouvez même être alerté si vous dépassez ce périmètre";
             break;
         case "linkedin":
             newWindowUrl = "https://www.linkedin.com/sharing/share-offsite/?url=https://covidradius.info";
@@ -79,7 +79,7 @@ function initMap() {
         center: [defaultLat, defaultLong],
         center: [defaultLat, defaultLong],
         zoom: 6,
-        layers: [streets]
+        layers: [outdoor]
     });
     L.control.scale({ imperial: false }).addTo(map);
 
@@ -226,7 +226,7 @@ function unitOrRangeChanged() {
 function drawCircleOnMap(latLong, isHome) {
     document.getElementById("currentLocationButton").classList.remove("hidden");
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
-        //document.getElementById("generateRandomTripButton").classList.remove("hidden");
+        document.getElementById("generateRandomTripButton").classList.remove("hidden");
     }
     if (isHome) {
         homeMarkersLayer.clearLayers();
@@ -446,7 +446,7 @@ function getCurrentLocation(isHome) {
             currentLocationButton.innerHTML = "<span class='ion-android-checkmark-circle'> Localisation en temps réel établie</span>";
             document.getElementById("alertsBlock").classList.remove("hidden");
             drawCircleOnMap(currentUserLocation, isHome);
-            document.getElementById("activityTimerButton").classList.remove("hidden");
+            //document.getElementById("activityTimerButton").classList.remove("hidden");
             if (isFirstRefreshOfCurrentUserLocation) {
                 isFirstRefreshOfCurrentUserLocation = false;
                 if (isBrowserMobile()) {

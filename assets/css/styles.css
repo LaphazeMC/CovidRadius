@@ -19,6 +19,10 @@ ol, ul {
     list-style: inherit !important;
 }
 
+.hidden{
+    display: none !important;
+}
+
     ul li {
         padding: 4px;
         margin-left: 10px;
