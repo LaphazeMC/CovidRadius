@@ -20,3 +20,11 @@ If you want to use this app, please respect the APACHE LICENCE 2.0 that can be s
 - You must leave the link to this github
 - You can make money (using adversting or whatever you prefer) using this source code
 - You can modify source code and adapt to fit your needs
+
+## Screenshots
+
+### Current 11 may version
+![current version 11 may](https://covidradius.info/assets/images/covidRadius.jpg)
+
+### Isodistance initial version
+![isodistance initial version](https://cdn-techno.konbini.com/fr/images/files/2020/04/covidvarius.jpg)
