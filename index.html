@@ -13,19 +13,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/GpPluginLeaflet.css">
     <title>Carte périmètre confinement COVID-19 FRANCE</title>
-    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre 100km depuis votre domicile de la zone de confinement du COVID-19">
+    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre 1km depuis votre domicile de la zone sortie de confinement du COVID-19">
     <meta name="Copyright" content="SOLUCIDIA">
     <meta name="Author" content="Maxime Girard">
     <meta name="Identifier-Url" content="https://covidradius.info/">
     <meta name="Robots" content="all">
     <meta name="Rating" content="general">
     <meta name="Distribution" content="global">
+    <meta property="og:updated_time" content="1604003519" />
     <meta property="og:title" content="Carte périmètre confinement COVID-19 FRANCE">
     <meta property="og:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
-    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 100km depuis votre domicile de la zone de confinement du COVID-19">
+    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 1km depuis votre domicile de la zone sortie de confinement du COVID-19">
     <meta property="og:url" content="https://covidradius.info/">
     <script data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
 </head>
 <body>
     <main class="flex flex-wrap">
@@ -35,9 +37,9 @@
                     <img class="self-center xs:full-w" src="assets/images/baneer.png" alt="COVID-19 Baneer" id="logo">
                 </div>
                 <div class="px-6 py-4">
-                    <div class="font-bold text-xl mb-2">Déconfinement 11 mai - Déplacements autorisés à 100 km à vol d'oiseau 🇫🇷</div>
+                    <div class="font-bold text-xl mb-2">Confinement 2 🇫🇷</div>
                     <p class="text-gray-700 text-base">
-                        Cette carte vous permet de connaitre votre périmètre de sortie dans un rayon de 100 kilomètres autour de votre domicile. Il est possible de se déplacer dans un département adjacent. Les couleurs par département sont mises à jour en temps réel.
+                        Cette carte vous permet de connaitre votre périmètre de sortie dans un rayon de 1 kilomètre pendant 1h maximum autour de votre domicile. CovidRadius respecte votre anonymat, rien n'est stocké.
                     </p>
                 </div>
             </div>
@@ -80,10 +82,10 @@
                         </label>
                     </div>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
-                    <!--<button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
+                    <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
-                    </button>-->
-                    <div id="generateRandomTripButton" class="lg:flex hidden">
+                    </button>
+                    <!--<div id="generateRandomTripButton" class="lg:flex hidden">
                         <div class="lg:w-4/6 md:w-6/6 lg:mb-0 mb-2 w-full">
                             <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-1 px-2 rounded focus:outline-none" type="button" style="font-size: 0.8rem">
                                 <span class="ion-flag"></span> Générer un itinéraire aléatoire
@@ -96,12 +98,13 @@
                             <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="10" value="10">
                         </div>
                     </div>
+                    -->
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
                                 Distance
                             </label>
-                            <input onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="100" value="100">
+                            <input onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="1" value="1">
                         </div>
                         <div class="w-full md:w-3/5 px-2 mb-4">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="unit">
@@ -117,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="min-width:400px; width: 100%; min-height:120px; margin: 0 auto; margin-bottom: 10px">
+                        <div style="min-width:400px; width: 100%; min-height:130px; margin: 0 auto; margin-bottom: 10px">
                             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                             <ins class="adsbygoogle"
                                  style="display:block"
@@ -131,9 +134,9 @@
                         </div>
                         <div class="p-2 bg-red-800 self-center mb-2 text-white leading-none rounded-full flex lg:inline-flex" role="alert">
                             <span style="max-height: 22px;" class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs mr-2">!</span>
-                            <span class="mr-2 text-center flex-auto">En france, la distance maximum autorisée est actuellement de 100 kilomètres</span>
+                            <span class="mr-2 text-center flex-auto">Confinement N°2 - 29 Octobre 23:59</span>
                         </div>
-                        <p class="text-gray-600 text-xs italic">Aucune attestation n'est nécessaire à partir du moment où vous restez dans votre zone de 100 kilomètres. Si vous dépassez la limite de 100 kilomètres depuis votre domicile, il sera alors nécessaire de justifier votre déplacement avec une attestation.</p>
+                        <p class="text-gray-600" style="margin: 0 auto;">L'attestation de déplacement dérogatoire est disponible <a href="https://media.interieur.gouv.fr/attestation-couvre-feu-covid-19/" target="_blank">ICI</a></p>
                     </div>
                 </form>
                 <div class="px-2 bg-gray-200">
@@ -162,13 +165,6 @@
                     <button class="bg-pink-400 text-white font-bold py-2 px-4 rounded inline-flex items-center" style="font-size: 1.1rem" onclick="shareSocial('mail')">
                         <span class="ion-email"></span>
                     </button>
-                </div>
-                <div class="text-center p-2">
-                    <a href="https://brave.com/fr?ref=cov176" target="_blank">
-                        <button class="bg-blue-700 text-white font-bold py-1 px-1 rounded inline-flex items-center justify-center" style="font-size: 0.8rem;">
-                            <span class="ion-star"></span>  Navigateur web sans pub similaire google chrome
-                        </button>
-                    </a>
                 </div>
             </div>
         </div>
@@ -236,13 +232,12 @@
         </div>
     </main>
     <footer class="w-full bg-gray-800 p-2 text-white text-center text-xs mt-4 lg:mt-0">
-        <span id="copyright">Développé avec ❤️ par Maxime Girard sur une 💡 de Loïc Bouvet</span> - Aucune donnée n'est stockée ni récupérée -
+        <span id="copyright">Développé avec ❤️ par <a href="https://twitter.com/maximegir" target="_blank">Maxime Girard</a> sur une 💡 de Loïc Bouvet</span> - Aucune donnée n'est stockée ni récupérée -
         <a class="text-blue-600 tooltip" href="mailto:contact@covidradius.info">
             Contact
             <span style="margin-left: -100px" class='tooltip-text bg-black p-3 text-white -mt-8 rounded text-sm z-50'>contact@covidradius.info</span>
         </a> -
         <a class="text-blue-600" target="_blank" href="https://github.com/LaphazeMC/CovidRadius">Code source</a> -
-        <a class="text-blue-600" target="_blank" href="https://media.interieur.gouv.fr/deplacement-covid-19/">Attestation de sortie numérique</a> -
         <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/ios.mp4">Aide IOS</a> -
         <a class="text-blue-600" target="_blank" href="https://covidradius.info/assets/images/android.mp4">Aide Android</a>
     </footer>
@@ -256,7 +251,7 @@
     <script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
-    <script src="assets/js/main.js?v=88"></script>
+    <script src="assets/js/main.js?v=92"></script>
     <script src="assets/js/randomTrip.min.js?v=16"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>

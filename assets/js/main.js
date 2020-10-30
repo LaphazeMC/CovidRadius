@@ -27,7 +27,7 @@ var userMarker = L.AwesomeMarkers.icon({
     icon: 'person',
     markerColor: 'red'
 });
-function styleDepartment(feature) {
+/*function styleDepartment(feature) {
     return {
         color: (feature.properties.color !== undefined) ? feature.properties.color : "red",
         fillOpacity: 0,
@@ -43,7 +43,7 @@ function onEachFeature(feature, layer) {
         layer.bindPopup(feature.properties.nom);
     }
 }
-
+*/
 function shareSocial(socialNetworkName) {
     var newWindowUrl = "";
     switch (socialNetworkName) {
@@ -83,10 +83,10 @@ function initMap() {
     });
     L.control.scale({ imperial: false }).addTo(map);
 
-    var geojsonLayer = $.getJSON("https://covidradius.info/assets/departments.json", function (json) {
-        L.geoJson(json.features, { style: styleDepartment/*, onEachFeature: onEachFeature*/ }).addTo(departmentsLayer);
+    /*var geojsonLayer = $.getJSON(window.location.origin + "/assets/departments.json", function (json) {
+        L.geoJson(json.features, { style: styleDepartment/*, onEachFeature: onEachFeature }).addTo(departmentsLayer);
         map.addLayer(departmentsLayer);
-    });
+    });*/
 
     var baseLayers = {
         "Satellite": satellite,
@@ -226,7 +226,7 @@ function unitOrRangeChanged() {
 function drawCircleOnMap(latLong, isHome) {
     document.getElementById("currentLocationButton").classList.remove("hidden");
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
-        document.getElementById("generateRandomTripButton").classList.remove("hidden");
+        //document.getElementById("generateRandomTripButton").classList.remove("hidden");
     }
     if (isHome) {
         homeMarkersLayer.clearLayers();
@@ -446,7 +446,7 @@ function getCurrentLocation(isHome) {
             currentLocationButton.innerHTML = "<span class='ion-android-checkmark-circle'> Localisation en temps réel établie</span>";
             document.getElementById("alertsBlock").classList.remove("hidden");
             drawCircleOnMap(currentUserLocation, isHome);
-            //document.getElementById("activityTimerButton").classList.remove("hidden");
+            document.getElementById("activityTimerButton").classList.remove("hidden");
             if (isFirstRefreshOfCurrentUserLocation) {
                 isFirstRefreshOfCurrentUserLocation = false;
                 if (isBrowserMobile()) {
