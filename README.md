@@ -3,14 +3,15 @@
 - Display authorized perimeter radius (isodistance) for a specific distance (1 to 100 kilometers)
 - Real-time user's geolocation and alerts (vibration/audio) if he goes out of authorized perimeter.
 - Random trip generation inside perimeter (distance of trip can be configured)
+- Check if another address is inside home radius perimeter
 
 ## Stack : 
 
 OpenStreetMap/Leaflet/TailwindCSS
 
 ## Build : 
-There is nothing to do, only copy/paste to your Web server and it will work like a charm.
-Note : Please change API key if possible
+Host on any web server, or if you want to test it locally, I suggest you to install this npm package https://www.npmjs.com/package/http-server
+And run `http-server -p 8080` 
 
 ## Distribution :
 
