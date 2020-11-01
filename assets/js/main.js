@@ -2,10 +2,12 @@ var defaultLat = 46.5;
 var defaultLong = 4.5;
 var map = null;
 var homeMarkersLayer = L.featureGroup();
+var anotherAddressMarkersLayer = L.featureGroup();
 var departmentsLayer = L.featureGroup();
 var currentLocationMarkerLayer = L.featureGroup();
 var tripLayer = L.featureGroup();
 var currentUserLocation = [];
+var currentAnotherAddressLocation = null;
 var isCurrentHomeLocationActive = false;
 var isFirstRefreshOfCurrentUserLocation = true;
 var watchCurrentUserLocation = null;
@@ -22,6 +24,10 @@ L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
 var homeMarker = L.AwesomeMarkers.icon({
     icon: 'home',
     markerColor: 'blue'
+});
+var anotherAddressMarker = L.AwesomeMarkers.icon({
+    icon: 'pin',
+    markerColor: 'orange'
 });
 var userMarker = L.AwesomeMarkers.icon({
     icon: 'person',
@@ -171,17 +177,25 @@ var $select = $('.select-address').selectize({
         });
     },
     onChange: function (value, isOnInitialize) {
-        console.log($(this));
         if (value) {
-            isCurrentHomeLocationActive = false;
-            homeLocationLatLng = parseLatLongFromSelect(value);
-            try {
-                localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
-                localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
-            } catch (e) {
-                console.log("can't set in local storage" + e);
+            if ($(this)[0].$input[0].id == "searchAddresses") {
+                isCurrentHomeLocationActive = false;
+                homeLocationLatLng = parseLatLongFromSelect(value);
+                try {
+                    localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
+                    localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
+                } catch (e) {
+                    console.log("can't set in local storage" + e);
+                }
+                drawCircleOnMap(parseLatLongFromSelect(value), true);
+                if (currentAnotherAddressLocation != null) {
+                    drawAnotherAddressPin(currentAnotherAddressLocation);
+                }
             }
-            drawCircleOnMap(parseLatLongFromSelect(value), true);
+            if ($(this)[0].$input[0].id == "searchAnotherAddress") {
+                currentAnotherAddressLocation = parseLatLongFromSelect(value);
+                drawAnotherAddressPin(currentAnotherAddressLocation);
+            }
         }
     }
 });
@@ -212,6 +226,27 @@ function checkIfInsideHomeRadius() {
     }
 }
 
+function checkIfAnotherAddressInsideHomeRadius(anotherAddressLatLng) {
+    if (homeMarkersLayer._layers != null) {
+        var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
+        var radius = homeCircle.getRadius(); //get home circle radius in metter
+        var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
+        isAnotherAddressInsideHomeRadius = Math.abs(circleCenterPoint.distanceTo(anotherAddressLatLng)) <= radius;
+        $("#anotherAddressInsideResult").removeClass("hidden");
+        if (isAnotherAddressInsideHomeRadius) {
+            $("#anotherAddressInsideResult").removeClass("bg-red-600");
+            $("#anotherAddressInsideResult").addClass("bg-green-600");
+            $("#anotherAddressInsideResult").html("Dedans <span class='ion-checkmark'></span>");
+        }
+        else {
+            $("#anotherAddressInsideResult").removeClass("bg-green-600");
+            $("#anotherAddressInsideResult").addClass("bg-red-600");
+            $("#anotherAddressInsideResult").html("Dehors <span class='ion-close-round'></span>");
+        }
+    }
+
+}
+
 function unitOrRangeChanged() {
     if (!isCurrentHomeLocationActive) {
         var selectizeControl = $select[0].selectize;
@@ -226,6 +261,7 @@ function unitOrRangeChanged() {
 
 function drawCircleOnMap(latLong, isHome) {
     document.getElementById("currentLocationButton").classList.remove("hidden");
+    document.getElementById("checkAnotherAddressField").classList.remove("hidden");
     if (isHome || isFirstRefreshOfCurrentUserLocation) { // avoid zooming each time user location is updated
         //document.getElementById("generateRandomTripButton").classList.remove("hidden");
     }
@@ -279,6 +315,18 @@ function drawCircleOnMap(latLong, isHome) {
         map.addLayer(currentLocationMarkerLayer);
         checkIfInsideHomeRadius();
     }
+}
+
+function drawAnotherAddressPin(latLong) {
+    anotherAddressMarkersLayer.clearLayers();
+    L.marker(latLong, { icon: anotherAddressMarker }).bindTooltip("Adresse à verifier",
+        {
+            permanent: true,
+            direction: 'top',
+            offset: [0, -40]
+        }).addTo(anotherAddressMarkersLayer);
+    map.addLayer(anotherAddressMarkersLayer);
+    checkIfAnotherAddressInsideHomeRadius(latLong);
 }
 
 function displayAlertMapMessage(isActive) {

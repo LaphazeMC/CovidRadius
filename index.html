@@ -82,10 +82,12 @@
                         </label>
                     </div>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
-                    <div class="flex hidden" id="checkAnotherAddressField">
-                        <div class="w-full w:6/7">
+                    <div class="flex hidden mt-2" id="checkAnotherAddressField">
+                        <div class="w-full">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="searchAnotherAddress">
+                                <span class="inline-block bg-red-600 text-white text-xs px-2 rounded-full uppercase font-semibold tracking-wide">Nouveau</span>
                                 Verifier si une adresse est dans le périmètre
+                                <p class="inline-block hidden text-white text-xs px-2 rounded-full uppercase font-semibold tracking-wide" id="anotherAddressInsideResult"></p>
                             </label>
                             <input autocomplete="off" class="select-address" id="searchAnotherAddress" />
                         </div>
@@ -94,19 +96,19 @@
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
                     <!--<div id="generateRandomTripButton" class="lg:flex hidden">
-        <div class="lg:w-4/6 md:w-6/6 lg:mb-0 mb-2 w-full">
-            <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-1 px-2 rounded focus:outline-none" type="button" style="font-size: 0.8rem">
-                <span class="ion-flag"></span> Générer un itinéraire aléatoire
-            </button>
-        </div>
-        <div class="lg:w-2/6 md:w-6/6 w-full lg:ml-2" style="margin-top: -15px;">
-            <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="distanceTrip">
-                ~ km du parcours
-            </label>
-            <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="10" value="10">
-        </div>
-    </div>
-    -->
+                        <div class="lg:w-4/6 md:w-6/6 lg:mb-0 mb-2 w-full">
+                            <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-1 px-2 rounded focus:outline-none" type="button" style="font-size: 0.8rem">
+                                <span class="ion-flag"></span> Générer un itinéraire aléatoire
+                            </button>
+                        </div>
+                        <div class="lg:w-2/6 md:w-6/6 w-full lg:ml-2" style="margin-top: -15px;">
+                            <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="distanceTrip">
+                                ~ km du parcours
+                            </label>
+                            <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="10" value="10">
+                        </div>
+                    </div>
+                    -->
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
@@ -260,7 +262,7 @@
     <!--<script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>-->
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <!--<script src='https://unpkg.com/@turf/turf/turf.min.js'></script>-->
-    <script src="assets/js/main.js?v=92"></script>
+    <script src="assets/js/main.js?v=97"></script>
     <script src="assets/js/randomTrip.min.js?v=16"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=ua-162094683-1"></script>
