@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link href="assets/css/styles.css?v=46" rel="stylesheet" />
+    <link href="assets/css/styles.css?v=47" rel="stylesheet" />
     <link rel="icon" type="image/png" href="assets/images/favicon.png" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
@@ -25,7 +25,7 @@
     <meta property="og:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
     <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 1km depuis votre domicile de la zone sortie de confinement du COVID-19">
     <meta property="og:url" content="https://covidradius.info/">
-    <script data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- <script data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
 </head>
@@ -50,7 +50,7 @@
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="address">
                                 Adresse de votre domicile
                             </label>
-                            <input autocomplete="off" id="searchAddresses" />
+                            <input autocomplete="off" class="select-address" id="searchAddresses" />
                         </div>
                         <div class="w:1/7 self-center mt-6 tooltip" style="min-width: 110px;">
                             <div class="flex items-center justify-between">
@@ -82,23 +82,31 @@
                         </label>
                     </div>
                     <p class="text-gray-600 text-xs italic">Depuis un ordinateur la récupération de votre position actuelle n'est pas précise contrairement à un téléphone sur un réseau mobile</p>
+                    <div class="flex hidden" id="checkAnotherAddressField">
+                        <div class="w-full w:6/7">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="searchAnotherAddress">
+                                Verifier si une adresse est dans le périmètre
+                            </label>
+                            <input autocomplete="off" class="select-address" id="searchAnotherAddress" />
+                        </div>
+                    </div>
                     <button onclick="startActivityTimer(true)" id="activityTimerButton" class="w-full mt-2 mb-2 bg-green-500 text-sm md:text-base hover:bg-green-700 h-10 text-white font-bold py-2 px-3 rounded focus:outline-none hidden" type="button">
                         <span class="ion-play"></span> Démarrer l'activité journalière (1H)
                     </button>
                     <!--<div id="generateRandomTripButton" class="lg:flex hidden">
-                        <div class="lg:w-4/6 md:w-6/6 lg:mb-0 mb-2 w-full">
-                            <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-1 px-2 rounded focus:outline-none" type="button" style="font-size: 0.8rem">
-                                <span class="ion-flag"></span> Générer un itinéraire aléatoire
-                            </button>
-                        </div>
-                        <div class="lg:w-2/6 md:w-6/6 w-full lg:ml-2" style="margin-top: -15px;">
-                            <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="distanceTrip">
-                                ~ km du parcours
-                            </label>
-                            <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="10" value="10">
-                        </div>
-                    </div>
-                    -->
+        <div class="lg:w-4/6 md:w-6/6 lg:mb-0 mb-2 w-full">
+            <button onclick="generateRandomTrip()" class="w-full mt-2 mb-2 bg-orange-500 text-sm md:text-base hover:bg-orange-700 h-10 text-white font-bold py-1 px-2 rounded focus:outline-none" type="button" style="font-size: 0.8rem">
+                <span class="ion-flag"></span> Générer un itinéraire aléatoire
+            </button>
+        </div>
+        <div class="lg:w-2/6 md:w-6/6 w-full lg:ml-2" style="margin-top: -15px;">
+            <label class="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="distanceTrip">
+                ~ km du parcours
+            </label>
+            <input class="w-full appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="tripDistanceInput" min="1" max="20" type="number" placeholder="10" value="10">
+        </div>
+    </div>
+    -->
                     <div class="flex flex-wrap -mx-2 mb-2 mt-2">
                         <div class="w-full md:w-2/5 px-2 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
@@ -121,7 +129,8 @@
                             </div>
                         </div>
                         <div style="min-width:400px; width: 100%; min-height:130px; margin: 0 auto; margin-bottom: 10px">
-                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                            <script type="text/plan" cookie-consent="targeting" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
+                            </script>
                             <ins class="adsbygoogle"
                                  style="display:block"
                                  data-ad-client="ca-pub-6921403650950030"
@@ -254,7 +263,8 @@
     <script src="assets/js/main.js?v=92"></script>
     <script src="assets/js/randomTrip.min.js?v=16"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162094683-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=ua-162094683-1"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.8.2/tarteaucitron.js"></script> -->
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -262,5 +272,19 @@
 
         gtag('config', 'UA-162094683-1');
     </script>
+    <!-- Cookie Consent by https://www.CookieConsent.com -->
+    <script type="text/javascript" src="//www.cookieconsent.com/releases/3.1.0/cookie-consent.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            cookieconsent.run({ "notice_banner_type": "interstitial", "consent_type": "express", "palette": "light", "language": "fr", "website_name": "CovidRadius" });
+        });
+    </script>
+
+    <!-- Google Ads -->
+    <script type="text/plain" cookie-consent="targeting" data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
+    </script>
+    <!-- end of Google Ads-->
+
+    <noscript>ePrivacy and GPDR Cookie Consent by <a href="https://www.CookieConsent.com/" rel="nofollow noopener">Cookie Consent</a></noscript>
 </body>
 </html>

@@ -122,7 +122,7 @@ window.onload = function () {
     initMap();
 };
 
-var $select = $('#searchAddresses').selectize({
+var $select = $('.select-address').selectize({
     valueField: 'latLong',
     labelField: 'name',
     searchField: 'name',
@@ -171,6 +171,7 @@ var $select = $('#searchAddresses').selectize({
         });
     },
     onChange: function (value, isOnInitialize) {
+        console.log($(this));
         if (value) {
             isCurrentHomeLocationActive = false;
             homeLocationLatLng = parseLatLongFromSelect(value);
