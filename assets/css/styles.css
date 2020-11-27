@@ -9,6 +9,20 @@ body {
     transition: opacity 0.25s ease;
 }
 
+
+.md\:max-w-md {
+    max-width: 40rem !important;
+}
+
+ol.no-marker, ul.no-marker {
+    list-style: none !important;
+}
+
+#stats-tabs button.active {
+    background-color: #4299e1 !important;
+    color: white !important;
+}
+
 a {
     border-bottom: 1px steelblue dashed;
     color: steelblue;
@@ -19,14 +33,14 @@ ol, ul {
     list-style: inherit !important;
 }
 
-.hidden{
+.hidden {
     display: none !important;
 }
 
-    ul li {
-        padding: 4px;
-        margin-left: 10px;
-    }
+ul li {
+    padding: 4px;
+    margin-left: 10px;
+}
 
 body .modal-active {
     overflow-x: hidden;
@@ -37,7 +51,7 @@ main {
     flex: 1;
 }
 
-.list-inside{
+.list-inside {
     list-style-position: inside !important;
 }
 

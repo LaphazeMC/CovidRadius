@@ -176,26 +176,26 @@ var $select = $('.select-address').selectize({
             }
         });
     },
-    onChange: function (value, isOnInitialize) {
+    onChange: function (value, isOnInitialize) { 
         if (value) {
-            if ($(this)[0].$input[0].id == "searchAddresses") {
-                isCurrentHomeLocationActive = false;
-                homeLocationLatLng = parseLatLongFromSelect(value);
-                try {
-                    localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
-                    localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
-                } catch (e) {
-                    console.log("can't set in local storage" + e);
-                }
-                drawCircleOnMap(parseLatLongFromSelect(value), true);
-                if (currentAnotherAddressLocation != null) {
-                    drawAnotherAddressPin(currentAnotherAddressLocation);
-                }
-            }
-            if ($(this)[0].$input[0].id == "searchAnotherAddress") {
-                currentAnotherAddressLocation = parseLatLongFromSelect(value);
-                drawAnotherAddressPin(currentAnotherAddressLocation);
-            }
+			if($(this)[0].$input[0].id == "searchAddresses"){
+		            isCurrentHomeLocationActive = false;
+				homeLocationLatLng = parseLatLongFromSelect(value);
+				try {
+					localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
+					localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
+				} catch (e) {
+					console.log("can't set in local storage" + e);
+				}
+				drawCircleOnMap(parseLatLongFromSelect(value), true);
+				if(currentAnotherAddressLocation != null){
+					drawAnotherAddressPin(currentAnotherAddressLocation);
+				}
+			}
+			if($(this)[0].$input[0].id == "searchAnotherAddress"){
+				currentAnotherAddressLocation = parseLatLongFromSelect(value);
+				drawAnotherAddressPin(currentAnotherAddressLocation);
+			}
         }
     }
 });
@@ -226,24 +226,24 @@ function checkIfInsideHomeRadius() {
     }
 }
 
-function checkIfAnotherAddressInsideHomeRadius(anotherAddressLatLng) {
-    if (homeMarkersLayer._layers != null) {
+function checkIfAnotherAddressInsideHomeRadius(anotherAddressLatLng){
+	if (homeMarkersLayer._layers != null) {
         var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
         var radius = homeCircle.getRadius(); //get home circle radius in metter
         var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
         isAnotherAddressInsideHomeRadius = Math.abs(circleCenterPoint.distanceTo(anotherAddressLatLng)) <= radius;
-        $("#anotherAddressInsideResult").removeClass("hidden");
-        if (isAnotherAddressInsideHomeRadius) {
-            $("#anotherAddressInsideResult").removeClass("bg-red-600");
-            $("#anotherAddressInsideResult").addClass("bg-green-600");
-            $("#anotherAddressInsideResult").html("Dedans <span class='ion-checkmark'></span>");
-        }
-        else {
-            $("#anotherAddressInsideResult").removeClass("bg-green-600");
-            $("#anotherAddressInsideResult").addClass("bg-red-600");
-            $("#anotherAddressInsideResult").html("Dehors <span class='ion-close-round'></span>");
-        }
-    }
+		$("#anotherAddressInsideResult").removeClass("hidden");
+		if(isAnotherAddressInsideHomeRadius){
+			$("#anotherAddressInsideResult").removeClass("bg-red-600");
+			$("#anotherAddressInsideResult").addClass("bg-green-600");
+			$("#anotherAddressInsideResult").html("Dedans <span class='ion-checkmark'></span>");
+		}
+		else{
+			$("#anotherAddressInsideResult").removeClass("bg-green-600");
+			$("#anotherAddressInsideResult").addClass("bg-red-600");
+			$("#anotherAddressInsideResult").html("Dehors <span class='ion-close-round'></span>");
+		}
+	}
 
 }
 
@@ -275,7 +275,7 @@ function drawCircleOnMap(latLong, isHome) {
                 offset: [0, -40]
             }).addTo(homeMarkersLayer);
         if (currentRadiusInMeters > 8000) {
-            map.setView(latLong, 8);
+            map.setView(latLong, 9);
             /*L.circle(latLong, { radius: currentRadiusInMeters, color: "green", fillOpacity: 0, dashArray: '20, 20', dashOffset: '10' }).addTo(homeMarkersLayer);
             Gp.Services.isoCurve({
                 position: {
@@ -317,16 +317,16 @@ function drawCircleOnMap(latLong, isHome) {
     }
 }
 
-function drawAnotherAddressPin(latLong) {
-    anotherAddressMarkersLayer.clearLayers();
-    L.marker(latLong, { icon: anotherAddressMarker }).bindTooltip("Adresse à verifier",
-        {
-            permanent: true,
-            direction: 'top',
-            offset: [0, -40]
-        }).addTo(anotherAddressMarkersLayer);
-    map.addLayer(anotherAddressMarkersLayer);
-    checkIfAnotherAddressInsideHomeRadius(latLong);
+function drawAnotherAddressPin(latLong){
+	anotherAddressMarkersLayer.clearLayers();
+	L.marker(latLong, { icon: anotherAddressMarker }).bindTooltip("Adresse à verifier",
+		{
+			permanent: true,
+			direction: 'top',
+			offset: [0, -40]
+		}).addTo(anotherAddressMarkersLayer);
+	map.addLayer(anotherAddressMarkersLayer);
+	checkIfAnotherAddressInsideHomeRadius(latLong);
 }
 
 function displayAlertMapMessage(isActive) {
@@ -387,7 +387,7 @@ Date.prototype.addHours = function (h) {
 
 function startActivityTimer() {
     if (!activityTimer) {
-        var nextHourTime = new Date().addHours(1).getTime();
+        var nextHourTime = new Date().addHours(3).getTime();
         var isHalfTime = false;
         var isCloseEndTime = false;
         document.getElementById("activityTimer").classList.remove("hidden");
@@ -396,7 +396,7 @@ function startActivityTimer() {
         document.getElementById("activityTimerButton").classList.remove("hover:bg-green-700");
         document.getElementById("activityTimerButton").classList.add("bg-red-600");
         document.getElementById("activityTimerButton").classList.add("hover:bg-red-700");
-        document.getElementById("timerLeftActivity").innerText = "1h:00:00";
+        document.getElementById("timerLeftActivity").innerText = "3h:00:00";
         document.getElementById("activityTimer").classList.add("bg-green-600");
         activityTimer = setInterval(function () {
 
@@ -410,15 +410,15 @@ function startActivityTimer() {
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("timerLeftActivity").innerText = minutes + ":" + seconds.toString().padStart(2, '0');
+            document.getElementById("timerLeftActivity").innerText = hours + "h" + minutes + ":" + seconds.toString().padStart(2, '0');
 
-            if (minutes < 30 && !isHalfTime) {
+            if (minutes < 90 && !isHalfTime) {
                 document.getElementById("activityTimer").classList.remove("bg-green-600");
                 document.getElementById("activityTimer").classList.add("bg-orange-600");
                 isHalfTime = true;
             }
 
-            if (minutes < 15 && !isCloseEndTime) {
+            if (minutes < 60 && !isCloseEndTime) {
                 document.getElementById("activityTimer").classList.remove("bg-orange-600");
                 document.getElementById("activityTimer").classList.add("bg-red-600");
                 isHalfTime = isCloseEndTime;
@@ -546,9 +546,37 @@ scrollTopButton.addEventListener('click', () => window.scrollTo({
     behavior: 'smooth',
 }));
 
+$("#statImageDeaths").hide();
+$("#statImageHospitalizations").hide();
+
+function setStatsImage(imageType,e){
+	$("#statImageCases").hide();
+	$("#statImageDeaths").hide();
+	$("#statImageHospitalizations").hide();
+	$("#stats-tabs button").removeClass("active");
+	$(e).addClass("active");
+	if(imageType == "cases"){
+		$("#statImageCases").show();
+	}
+	if(imageType == "deaths"){
+		$("#statImageDeaths").show();
+	}
+	if(imageType == "hospitalizations"){
+		$("#statImageHospitalizations").show();
+	}
+}
+
 var openmodal = document.querySelectorAll('.modal-open')
 for (var i = 0; i < openmodal.length; i++) {
     openmodal[i].addEventListener('click', function (event) {
+		if(event.srcElement.id == "stats-modal"){
+			$("#press-tab").hide();
+			$("#stats-tab").show();
+		}
+		else{
+			$("#press-tab").show();
+			$("#stats-tab").hide();
+		}
         event.preventDefault()
         toggleModal()
     })
