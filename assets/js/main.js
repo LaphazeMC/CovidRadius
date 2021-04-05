@@ -66,7 +66,7 @@ function shareSocial(socialNetworkName) {
             newWindowUrl = "whatsapp://send?text=https://covidradius.info";
             break;
         case "mail":
-            newWindowUrl = "mailto:?subject=Carte interactive française permettant d'être informé du périmètre 100km depuis votre domicile de la zone de confinement du COVID-19;body=Bonjour, %0D%0A Découvrez ce site qui permet de connaître le périmètre de 100km autorisé par rapport au confinement ! %0D%0A Voici le lien https://covidradius.info";
+            newWindowUrl = "mailto:?subject=Carte interactive française permettant d'être informé du périmètre 10km depuis votre domicile de la zone de confinement du COVID-19;body=Bonjour, %0D%0A Découvrez ce site qui permet de connaître le périmètre de 10km autorisé par rapport au confinement ! %0D%0A Voici le lien https://covidradius.info";
             break;
         default:
     }

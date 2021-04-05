@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <!--<link rel="stylesheet" type="text/css" href="assets/css/GpPluginLeaflet.css">-->
     <title>Carte périmètre confinement COVID-19 FRANCE</title>
-    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre 20km depuis votre domicile de la zone sortie de confinement du COVID-19">
+    <meta name="Description" content="Carte interactive française permettant d'être informé du périmètre 10km depuis votre domicile de la zone sortie de confinement du COVID-19">
     <meta name="Copyright" content="SOLUCIDIA">
     <meta name="Author" content="Maxime Girard">
     <meta name="Identifier-Url" content="https://covidradius.info/">
@@ -23,7 +23,7 @@
     <meta property="og:updated_time" content="1604003519" />
     <meta property="og:title" content="Carte périmètre confinement COVID-19 FRANCE">
     <meta property="og:image" content="https://covidradius.info/assets/images/covidRadius.jpg">
-    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 20km depuis votre domicile de la zone sortie de confinement du COVID-19">
+    <meta property="og:description" content="Carte interactive française permettant d'être informé du périmètre 10km depuis votre domicile de la zone sortie de confinement du COVID-19">
     <meta property="og:url" content="https://covidradius.info/">
     <!-- <script data-ad-client="ca-pub-6921403650950030" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
     <meta name="twitter:card" content="summary_large_image">
@@ -252,11 +252,11 @@
                     <img class="self-center xs:full-w" src="assets/images/baneer.png" alt="COVID-19 Baneer" id="logo">
                 </div>
                 <div class="px-6 py-4">
-                    <div class="font-bold text-xl mb-2">Confinement 2 allégé 🇫🇷 </div>
+                    <div class="font-bold text-xl mb-2">Confinement 3 National</div>
                     <h1 class="text-gray-700 text-base">
-                        Cette carte vous permet de connaitre votre périmètre de sortie dans un rayon de 20 kilomètres pendant 3h maximum autour de votre domicile. CovidRadius respecte votre anonymat, rien n'est stocké.
-                        <br><b>Mise à jour samedi 28 : 20km et 3 heures</b>
-                        </p>
+                        Cette carte vous permet de connaitre votre périmètre de sortie dans un rayon de 10 kilomètres sans limite de temps autour de votre domicile. CovidRadius respecte votre anonymat, rien n'est stocké.
+                        <br><b>Mise à jour mercredi 31/03 : 10 km et sans limite temporelle pour la France métropolitaine. A partir du samedi 3 avril au soir</b>
+                    </h1>
                 </div>
             </div>
             <div class="rounder shadow-lg w-full">
@@ -330,7 +330,7 @@
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="range">
                                 Distance
                             </label>
-                            <input onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="20" value="20">
+                            <input onchange="unitOrRangeChanged()" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="range" min="1" max="1000" type="number" placeholder="10" value="10">
                         </div>
                         <div class="w-full md:w-3/5 px-2 mb-4">
                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="unit">
@@ -346,7 +346,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="min-width:400px; width: 100%; min-height:130px; margin: 0 auto; margin-bottom: 10px">
+                        <div style="min-width:400px; width: 100%; min-height:130px; margin: 0 auto; margin-bottom: 10px; margin-top: 5px">
                             <!-- <ins class="adsbygoogle" -->
                             <!-- style="display:block" -->
                             <!-- data-ad-client="ca-pub-6921403650950030" -->
@@ -369,7 +369,7 @@
                         </div>
                         <div class="p-2 bg-red-800 self-center mb-2 text-white leading-none rounded-full flex lg:inline-flex" role="alert">
                             <span style="max-height: 22px;" class="flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs mr-2">!</span>
-                            <span class="mr-2 text-center flex-auto">Confinement N°2 allégé - Samedi 28/11/2020</span>
+                            <span class="mr-2 text-center flex-auto">Confinement N°3 - France métropolitaine</span>
                         </div>
                         <p class="text-gray-600" style="margin: 0 auto;">L'attestation de déplacement dérogatoire est disponible <a href="https://media.interieur.gouv.fr/deplacement-covid-19/" target="_blank">ICI</a></p>
                         <button id="stats-modal" class="w-full modal-open mt-2 h-10 hover:bg-blue-200 text-xs md:text-sm text-blue-600 border border-blue-600 font-bold py-1 px-2 rounded focus:outline-none" type="button">
@@ -496,7 +496,7 @@
                 </div>
             </div>
         </div>
-        <div id="taboola-below-map" class="visible sm:visible md:invisible lg:invisible xl:invisible"></div>
+        <div style="margin-top: 15px;" id="taboola-below-map" class="visible sm:visible md:invisible lg:invisible xl:invisible"></div>
         <script type="text/javascript">
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 window._taboola = window._taboola || [];
