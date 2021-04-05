@@ -126,6 +126,25 @@ function initMap() {
 
 window.onload = function () {
     initMap();
+    $("#uploadbuttongpx").change(function () {
+        if ($(this)[0].files.length > 0) {
+            var gpxFile = $(this)[0].files[0];
+            var reader = new FileReader();
+            reader.readAsText(gpxFile, "UTF-8");
+            reader.onload = function (evt) {
+                new L.GPX(evt.target.result, {
+                    async: true,
+                    marker_options: {
+                        startIconUrl: 'assets/images/pin-icon-start.png',
+                        endIconUrl: 'assets/images/pin-icon-end.png',
+                        shadowUrl: 'assets/images/pin-shadow.png'
+                    },
+                }).on('loaded', function (e) {
+                    map.fitBounds(e.target.getBounds());
+                }).addTo(map);
+            }
+        }
+    });
 };
 
 var $select = $('.select-address').selectize({
@@ -176,26 +195,26 @@ var $select = $('.select-address').selectize({
             }
         });
     },
-    onChange: function (value, isOnInitialize) { 
+    onChange: function (value, isOnInitialize) {
         if (value) {
-			if($(this)[0].$input[0].id == "searchAddresses"){
-		            isCurrentHomeLocationActive = false;
-				homeLocationLatLng = parseLatLongFromSelect(value);
-				try {
-					localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
-					localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
-				} catch (e) {
-					console.log("can't set in local storage" + e);
-				}
-				drawCircleOnMap(parseLatLongFromSelect(value), true);
-				if(currentAnotherAddressLocation != null){
-					drawAnotherAddressPin(currentAnotherAddressLocation);
-				}
-			}
-			if($(this)[0].$input[0].id == "searchAnotherAddress"){
-				currentAnotherAddressLocation = parseLatLongFromSelect(value);
-				drawAnotherAddressPin(currentAnotherAddressLocation);
-			}
+            if ($(this)[0].$input[0].id == "searchAddresses") {
+                isCurrentHomeLocationActive = false;
+                homeLocationLatLng = parseLatLongFromSelect(value);
+                try {
+                    localStorage.setItem('currentHomeAddressLatLng', homeLocationLatLng);
+                    localStorage.setItem('currentHomeAddress', $select[0].selectize.$control[0].children[0].innerText);
+                } catch (e) {
+                    console.log("can't set in local storage" + e);
+                }
+                drawCircleOnMap(parseLatLongFromSelect(value), true);
+                if (currentAnotherAddressLocation != null) {
+                    drawAnotherAddressPin(currentAnotherAddressLocation);
+                }
+            }
+            if ($(this)[0].$input[0].id == "searchAnotherAddress") {
+                currentAnotherAddressLocation = parseLatLongFromSelect(value);
+                drawAnotherAddressPin(currentAnotherAddressLocation);
+            }
         }
     }
 });
@@ -226,24 +245,24 @@ function checkIfInsideHomeRadius() {
     }
 }
 
-function checkIfAnotherAddressInsideHomeRadius(anotherAddressLatLng){
-	if (homeMarkersLayer._layers != null) {
+function checkIfAnotherAddressInsideHomeRadius(anotherAddressLatLng) {
+    if (homeMarkersLayer._layers != null) {
         var homeCircle = homeMarkersLayer._layers[Object.keys(homeMarkersLayer._layers)[1]];
         var radius = homeCircle.getRadius(); //get home circle radius in metter
         var circleCenterPoint = homeCircle.getLatLng(); //gets the circle's center latlng
         isAnotherAddressInsideHomeRadius = Math.abs(circleCenterPoint.distanceTo(anotherAddressLatLng)) <= radius;
-		$("#anotherAddressInsideResult").removeClass("hidden");
-		if(isAnotherAddressInsideHomeRadius){
-			$("#anotherAddressInsideResult").removeClass("bg-red-600");
-			$("#anotherAddressInsideResult").addClass("bg-green-600");
-			$("#anotherAddressInsideResult").html("Dedans <span class='ion-checkmark'></span>");
-		}
-		else{
-			$("#anotherAddressInsideResult").removeClass("bg-green-600");
-			$("#anotherAddressInsideResult").addClass("bg-red-600");
-			$("#anotherAddressInsideResult").html("Dehors <span class='ion-close-round'></span>");
-		}
-	}
+        $("#anotherAddressInsideResult").removeClass("hidden");
+        if (isAnotherAddressInsideHomeRadius) {
+            $("#anotherAddressInsideResult").removeClass("bg-red-600");
+            $("#anotherAddressInsideResult").addClass("bg-green-600");
+            $("#anotherAddressInsideResult").html("Dedans <span class='ion-checkmark'></span>");
+        }
+        else {
+            $("#anotherAddressInsideResult").removeClass("bg-green-600");
+            $("#anotherAddressInsideResult").addClass("bg-red-600");
+            $("#anotherAddressInsideResult").html("Dehors <span class='ion-close-round'></span>");
+        }
+    }
 
 }
 
@@ -317,16 +336,16 @@ function drawCircleOnMap(latLong, isHome) {
     }
 }
 
-function drawAnotherAddressPin(latLong){
-	anotherAddressMarkersLayer.clearLayers();
-	L.marker(latLong, { icon: anotherAddressMarker }).bindTooltip("Adresse à verifier",
-		{
-			permanent: true,
-			direction: 'top',
-			offset: [0, -40]
-		}).addTo(anotherAddressMarkersLayer);
-	map.addLayer(anotherAddressMarkersLayer);
-	checkIfAnotherAddressInsideHomeRadius(latLong);
+function drawAnotherAddressPin(latLong) {
+    anotherAddressMarkersLayer.clearLayers();
+    L.marker(latLong, { icon: anotherAddressMarker }).bindTooltip("Adresse à verifier",
+        {
+            permanent: true,
+            direction: 'top',
+            offset: [0, -40]
+        }).addTo(anotherAddressMarkersLayer);
+    map.addLayer(anotherAddressMarkersLayer);
+    checkIfAnotherAddressInsideHomeRadius(latLong);
 }
 
 function displayAlertMapMessage(isActive) {
@@ -549,34 +568,34 @@ scrollTopButton.addEventListener('click', () => window.scrollTo({
 $("#statImageDeaths").hide();
 $("#statImageHospitalizations").hide();
 
-function setStatsImage(imageType,e){
-	$("#statImageCases").hide();
-	$("#statImageDeaths").hide();
-	$("#statImageHospitalizations").hide();
-	$("#stats-tabs button").removeClass("active");
-	$(e).addClass("active");
-	if(imageType == "cases"){
-		$("#statImageCases").show();
-	}
-	if(imageType == "deaths"){
-		$("#statImageDeaths").show();
-	}
-	if(imageType == "hospitalizations"){
-		$("#statImageHospitalizations").show();
-	}
+function setStatsImage(imageType, e) {
+    $("#statImageCases").hide();
+    $("#statImageDeaths").hide();
+    $("#statImageHospitalizations").hide();
+    $("#stats-tabs button").removeClass("active");
+    $(e).addClass("active");
+    if (imageType == "cases") {
+        $("#statImageCases").show();
+    }
+    if (imageType == "deaths") {
+        $("#statImageDeaths").show();
+    }
+    if (imageType == "hospitalizations") {
+        $("#statImageHospitalizations").show();
+    }
 }
 
 var openmodal = document.querySelectorAll('.modal-open')
 for (var i = 0; i < openmodal.length; i++) {
     openmodal[i].addEventListener('click', function (event) {
-		if(event.srcElement.id == "stats-modal"){
-			$("#press-tab").hide();
-			$("#stats-tab").show();
-		}
-		else{
-			$("#press-tab").show();
-			$("#stats-tab").hide();
-		}
+        if (event.srcElement.id == "stats-modal") {
+            $("#press-tab").hide();
+            $("#stats-tab").show();
+        }
+        else {
+            $("#press-tab").show();
+            $("#stats-tab").hide();
+        }
         event.preventDefault()
         toggleModal()
     })

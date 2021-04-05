@@ -208,16 +208,17 @@
                     var hasStoreOnDeviceConsent = tcData.purpose.consents[1] || false;
 
                     if (hasStoreOnDeviceConsent) {
-                    < !-- var adSenseScript = document.createElement('script'); -->
-                    var firstScript = document.getElementsByTagName('script')[0];
-                    < !-- var url = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"; -->
-                    < !--adSenseScript.async = true; -->
-                    < !--adSenseScript.type = 'text/javascript'; -->
-                    < !--adSenseScript.src = url; -->
-                    < !--firstScript.parentNode.insertBefore(adSenseScript, firstScript); -->
+                        //< !-- var adSenseScript = document.createElement('script'); -->
+                        //var firstScript = document.getElementsByTagName('script')[0];
+                        //< !-- var url = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"; -->
+                        //< !--adSenseScript.async = true; -->
+                        //< !--adSenseScript.type = 'text/javascript'; -->
+                        //< !--adSenseScript.src = url; -->
+                        //< !--firstScript.parentNode.insertBefore(adSenseScript, firstScript); -->
 
 
-                    var analyticsScript = document.createElement('script');
+                        var analyticsScript = document.createElement('script');
+                        var firstScript = document.getElementsByTagName('script')[0];
                         url = "https://www.googletagmanager.com/gtag/js?id=UA-162094683-1";
                         analyticsScript.async = true;
                         analyticsScript.type = 'text/javascript';
@@ -270,7 +271,7 @@
                         </div>
                         <div class="w:1/7 self-center mt-6 tooltip" style="min-width: 110px;">
                             <div class="flex items-center justify-between">
-                                <span class='tooltip-text bg-black p-3 text-white -mt-10  rounded text-sm z-50'>Position actuelle</span>
+                                <span class='tooltip-text bg-black p-3 text-white -mt-10 rounded text-sm z-50'>Position actuelle</span>
                                 <button onclick="getCurrentLocation(true)" style="margin-top: -3px; height: 2.7rem" class="bg-blue-100 hover:bg-blue-200 text-xs md:text-sm text-blue-600 border border-blue-600 font-bold py-1 px-2 rounded focus:outline-none" type="button">
                                     <span class="ion-ios-location"></span> Ma position
                                 </button>
@@ -421,6 +422,13 @@
                     <span id="timerLeftActivity" class="ml-2"></span>
                 </div>
             </div>
+            <div style="top: 110px;left: 6px;" class="z-50 absolute inline-flex tooltip w-auto">
+                <span class='tooltip-text bg-black p-3 text-white -mt-20 rounded text-sm z-50'>Importer fichier GPX</span>
+                <label for="uploadbuttongpx" class="focus:outline-none text-black-600 px-2 py-2 text-sm rounded-full border border-gray-600 hover:bg-white-50 h-10 font-bold cursor-pointer">
+                    GPX
+                </label>
+                <input id="uploadbuttongpx" class="hidden" type="file" />
+            </div>
             <div id="map" class="z-10"></div>
         </div>
         <button onclick="topFunction()" id="scrollTopButton" title="Retour en haut de page"><span class="ion-arrow-up-c"></span></button>
@@ -526,10 +534,11 @@
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.5.1/gpx.min.js"></script>
     <!--<script type="text/javascript" src="assets/js/GpPluginLeaflet.js?v=2"></script>-->
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <!--<script src='https://unpkg.com/@turf/turf/turf.min.js'></script>-->
-    <script src="assets/js/main.js?v=116"></script>
+    <script src="assets/js/main.js?v=117"></script>
     <script src="assets/js/randomTrip.min.js?v=16"></script>
     <!-- Quantcast Tag -->
     <script type="text/javascript">
@@ -559,6 +568,5 @@
         </div>
     </noscript>
     <!-- End Quantcast tag -->
-    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/AmauriC/tarteaucitron.js@1.8.2/tarteaucitron.js"></script> -->
 </body>
 </html>
