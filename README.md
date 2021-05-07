@@ -28,4 +28,4 @@ If you want to use this app, please respect the APACHE LICENCE 2.0 that can be s
 ![current version 11 may](https://covidradius.info/assets/images/covidRadius.jpg)
 
 ### Isodistance initial version
-![isodistance initial version](https://cdn-techno.konbini.com/fr/images/files/2020/04/covidvarius.jpg)
+![isodistance initial version](https://cdn-news.konbini.com/images/wp-content/blogs.dir/29/files/2020/04/cartecoronavirus.jpg)
